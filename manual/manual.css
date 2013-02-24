@@ -1,0 +1,17 @@
+body
+{
+	margin: 0 auto;
+	width: 90%;
+	padding: 1em;
+}
+
+li > p
+{
+	display: inline;
+}
+
+pre
+{
+	border: none;
+	background: none;
+}

@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="chrome=1"/>
+<link rel="stylesheet" type="text/css" href="../stylesheets/stylesheet.css" media="screen"/>
+<link rel="stylesheet" type="text/css" href="../stylesheets/pygment_trac.css" media="screen"/>
+<link rel="stylesheet" type="text/css" href="manual.css" media="screen"/>
+<link rel="stylesheet" type="text/css" href="../stylesheets/print.css" media="print"/>
+<title>data-bag user's guide</title>
+</head>
+<body>
+<h1>
+<em>Data-bag</em> user's guide</h1>
+<p>
+<small>Copyright © 2010-2013 Konstantin Livitski. License terms apply.
+Please read file <a title="NOTICE file" href="https://github.com/data-bag/code/blob/master/NOTICE.md">
+<code>NOTICE.md</code>
+</a> or browse
+<a href="http://www.livitski.name/projects/data-bag/license">http://www.livitski.name/projects/data-bag/license</a> for details.</small>
+</p>
+<hr/>
+<p>
+<em>This manual is a work in progress. You can obtain the summary and descriptions
+of all command-line options by running data-bag without arguments.</em>
+</p>
+<p>
+<em>Last modified: February, 19 2013</em>
+</p>
+<hr/>
+<h2>Contents</h2>
+<ul>
+<li>
+<a href="#toc000001">What is data-bag?</a>
+</li>
+<li>
+<a href="#toc000002">Prerequisites</a>
+</li>
+<li>
+<a href="#toc000003">Getting started</a>
+</li>
+<li>
+<a href="#toc000004">Synchronizing files</a>
+</li>
+<li>
+<a href="#toc000005">Commands and options; disabling automatic sync</a>
+</li>
+<li>
+<a href="#toc000006">Managing replicas</a>
+</li>
+<li>
+<a href="#toc000007">Filtering files</a>
+</li>
+<li>
+<a href="#toc000008">Listing the bag's contents</a>
+</li>
+<li>
+<a href="#toc000009">Tracking versions of stored files</a>
+</li>
+<li>
+<a href="#toc000010">Resolving conflicts among replicas</a>
+</li>
+<li>
+<a href="#toc000011">Deleted files</a>
+</li>
+<li>
+<a href="#toc000012">Restoring old versions and deleted files</a>
+</li>
+<li>
+<a href="#toc000013">Rolling back changes to files</a>
+</li>
+<li>
+<a href="#toc000014">Purging old versions from shared storage</a>
+</li>
+<li>
+<a href="#toc000015">Encrypting your bag</a>
+</li>
+<li>
+<a href="#toc000016">Concepts and terms used in this manual</a>
+</li>
+<li>
+<a href="#toc000017">Your feedback and suggestions</a>
+</li>
+</ul>
+<h2 id="toc000001">
+<a name="toc000001"> </a>What is <em>data-bag</em>?</h2>
+<p>
+<em>Data-bag</em> is a tool that helps keep files consistent across multiple
+devices, track the updates, and restore lost or changed files.</p>
+<p>It will create
+and maintain a database with copies of your files on a shared medium, such as
+a USB drive, memory stick, smartphone, tablet, or network server. As long as
+you have access to that medium (e.g. carry your phone or memory stick), you
+can create up-to-date copies of your files on any device capable of running
+<em>data-bag</em>. Changes made to a local copy will be stored on the shared
+medium next time you synchronize the copy. <em>Data-bag</em> will keep track
+of your changes and update other local copies of your files when you synchronize
+those copies. It will also store histories of changes to synchronized files,
+allowing you to review past changes, resolve conflicting updates, and restore
+corrupt or deleted files.</p>
+<h2 id="toc000002">
+<a name="toc000002"> </a>Prerequisites</h2>
+<p>The <em>data-bag</em> executable is usually a single file named <code>databag.jar</code>
+that you can run on different machines. A machine can run that file if it has a
+<dfn>Java runtime</dfn> installed. The tool is compatible with:</p>
+<ul>
+<li>
+<p>
+<a title="OpenJDK packages" href="http://openjdk.java.net/install/index.html">OpenJDK Runtime Environment for JDK 6 or 7</a> that
+may be installed on, or available as an option for your system; <em>or</em>
+</p>
+</li>
+<li>
+<p>
+<a title="Oracle Java Runtime downloads" href="http://java.com/en/download/index.jsp">Java runtime version 5, 6, or 7 (JRE 1.5+)</a> downloadable
+from Oracle</p>
+</li>
+</ul>
+<p>Throughout this guide, we assume that your machine runs a (mostly)
+<a title="Mostly POSIX-compliant systems" href="http://en.wikipedia.org/wiki/POSIX#Mostly_POSIX-compliant">
+<dfn>POSIX-compliant</dfn>
+</a> operating system, such as GNU/Linux, BSD,
+or Mac OS X. <em>Data-bag</em> is designed to run on various platforms, and
+you may be able to use
+it on a system that does not comply with <a title="Mostly POSIX-compliant systems" href="http://en.wikipedia.org/wiki/POSIX#Mostly_POSIX-compliant">POSIX</a> specifications. In
+that case you have to adjust the syntax of your commands and file locations
+according to the system's conventions, or install a <dfn>POSIX compatibility
+kit</dfn>, to be able to follow this guide.</p>
+<p>We also assume that you use a single shared medium, mounted at <code>/mnt/</code>,
+containing a copy of the <em>data-bag</em> executable <code>databag.jar</code> and that
+your shell can find the Java runtime executable on its search path.
+These conditions are not necessary, and <em>data-bag</em> will work in other
+environments if you make adjustments to the commands you enter.</p>
+<h2 id="toc000003">
+<a name="toc000003"> </a>Getting started</h2>
+<p>To run the standard <em>data-bag</em> executable, use the <code>-jar</code> option of
+the Java runtime command:</p>
+<pre>
+<code>$ java -jar /mnt/databag.jar
+</code>
+</pre>
+<p>Initially, there is no <a title="Concepts and terms: bag" href="#term-bag">bag</a> for <em>data-bag</em> to work with, and the tool
+informs you of that and prints its usage summary:</p>
+<blockquote>
+<pre>
+<code>Data-bag: file synchronization, backup, and change tracking tool, v.1.05.130122
+Copyright 2010-13 Konstantin Livitski and others.
+See file "LICENSE/data-bag.md" for applicable terms,
+ http://data-bag.org to learn more about the project.
+
+Jan 21, 2013 6:50:45 PM name.livitski.databag.cli.Launcher run
+WARNING: Shared storage not found on /home/user
+Usage:
+            java -jar databag.jar [options] command [arguments]
+
+Common options:
+[-d medium] [--create] [-C path [--default]] [-A action]
+[--fn file-id] [--vn version-id] [-o output-file] [-N]
+[-F filter-name [--default | --invert]] [-v] [database-options]
+Command: -? | -l | -h | -r | --drop | --log | --purge | [-s]
+</code>
+</pre>
+<p>.....</p>
+</blockquote>
+<p>To create a <a title="Concepts and terms: bag" href="#term-bag">bag</a> in the current directory, add the <code>--create</code> option to the
+previous command line. To work with a medium at another location, add the
+<code>--medium</code> switch (or its shorthand <code>-d</code>) with the path to that medium:</p>
+<pre>
+<code>$ java -jar /mnt/databag.jar -d /mnt --create
+</code>
+</pre>
+<p>Given this command line, <em>data-bag</em> will create a <a title="Concepts and terms: bag" href="#term-bag">bag</a> and tell you
+that there is no local <a title="Concepts and terms: replica" href="#term-replica">replica</a> defined for your user account:</p>
+<blockquote>
+<pre>
+<code>Data-bag: file synchronization, backup, and change tracking tool, v.1.05.130120
+Copyright 2010-13 Konstantin Livitski and others.
+See file "LICENSE/data-bag.md" for applicable terms,
+ http://data-bag.org to learn more about the project.
+
+Jan 21, 2013 7:05:39 PM name.livitski.databag.db.Manager create
+INFO: Created database jdbc:h2:file:/mnt/databag/databag;LOCK_MODE=1;COMPRESS_LO
+B=DEFLATE;MAX_LENGTH_INPLACE_LOB=3500
+Jan 21, 2013 7:05:39 PM name.livitski.databag.cli.Launcher run
+WARNING: Local replica of shared storage /mnt not found for user@d1.data-bag.org
+</code>
+</pre>
+</blockquote>
+<p>The <a title="Concepts and terms: bag" href="#term-bag">bag</a> for shared medium at <code>/mnt/</code> is now stored in the <code>/mnt/databag/</code>
+directory:</p>
+<pre>
+<code>$ ls -l /mnt/databag/
+</code>
+</pre>
+<blockquote>
+<pre>
+<code>total 48
+-rw-r--r-- 1 user users 47104 2013-01-21 19:05 databag.h2.db
+</code>
+</pre>
+</blockquote>
+<p>To synchronize files, <em>data-bag</em> needs <em>both</em> a <a title="Concepts and terms: bag" href="#term-bag">bag</a> and a
+<a title="Concepts and terms: replica" href="#term-replica">replica</a> directory that stores local copies of those files. The <a title="Concepts and terms: bag" href="#term-bag">bag</a>
+remembers locations of its <a title="Concepts and terms: replica" href="#term-replica">replicas</a> for each machine and user
+account combination it is used with. A user can have multiple replicas of the
+same bag on any machine, but only one of these replicas is treated as the
+<a title="Concepts and terms: default replica" href="#term-default-replica">default replica</a> for the user's account. The first replica you create on
+a machine is designated as its <a title="Concepts and terms: default replica" href="#term-default-replica">default replica</a> for your account unless
+you switch the default to another <a title="Concepts and terms: replica" href="#term-replica">replica</a>.</p>
+<p>A directory becomes a <a title="Concepts and terms: replica" href="#term-replica">replica</a> of your <a title="Concepts and terms: bag" href="#term-bag">bag</a> when you run
+<em>data-bag</em> with the <code>--local</code> option (or its shorthand <code>-C</code>) and the
+path to that directory. The same option is used to operate on a non-default
+<a title="Concepts and terms: replica" href="#term-replica">replica</a> for your account:</p>
+<pre>
+<code>$ java -jar /mnt/databag.jar -d /mnt/ -C /tmp/demo
+</code>
+</pre>
+<p>If the directory that you designate for a replica does not exist, <em>data-bag</em>
+will create it for you. If that directory exists, its files are automatically
+synchronized, i.e. added to your new <a title="Concepts and terms: bag" href="#term-bag">bag</a>.</p>
+<blockquote>
+<p>Note that the first several lines of <em>data-bag</em>'s output are always
+the same as long as you are using the same executable. These lines contain
+general information about the tool and the project. When running
+<em>data-bag</em> from a script, you may want to omit those lines from
+the output. To do that, add the <code>--nobanner</code> option to the command line.
+In the following examples, we quote the tool's output with that option
+present, even though it is not shown.</p>
+<pre>
+<code>Jan 21, 2013 8:04:18 PM name.livitski.databag.app.maint.ReplicaManager registerN
+ewReplica
+INFO: Created a new replica #1 for user@d1.data-bag.org at /tmp/demo
+Jan 21, 2013 8:04:18 PM name.livitski.databag.app.sync.SyncService synchronize
+INFO: Synchronizing replica #1 for user@d1.data-bag.org at /tmp/demo with databa
+se at /mnt/databag using filter "all" ...
+</code>
+</pre>
+</blockquote>
+<h2 id="toc000004">
+<a name="toc000004"> </a>Synchronizing files</h2>
+<p>Once the <a title="Concepts and terms: bag" href="#term-bag">bag</a> and the <a title="Concepts and terms: default replica" href="#term-default-replica">default replica</a> are set up, running
+<em>data-bag</em> without arguments in the bag's directory
+(or, with the <code>-d</code> argument, in any directory)
+will automatically synchronize them:</p>
+<pre>
+<code>$ java -jar /mnt/databag.jar -d /mnt/
+</code>
+</pre>
+<blockquote>
+<pre>
+<code>Jan 21, 2013 8:35:54 PM name.livitski.databag.app.sync.SyncService synchronize
+INFO: Synchronizing replica #1 for user@d1.data-bag.org at /tmp/demo with databa
+se at /mnt/databag using filter "all" ...
+</code>
+</pre>
+</blockquote>
+<p>You can also request synchronization explicitly by entering the <code>--sync</code>
+command (or its shorthand <code>-s</code>). The following command does the same as above:</p>
+<pre>
+<code>$ java -jar /mnt/databag.jar -d /mnt/ -s
+</code>
+</pre>
+<p>With an explicit <code>--sync</code> command, you can also tell <em>data-bag</em> what files it
+should synchronize, by appending a <a title="Concepts and terms: location pattern" href="#term-pattern">location pattern</a> argument to it.</p>
+<pre>
+<code>$ java -jar /mnt/databag.jar -d /mnt/ -s 'doc/*.txt'
+</code>
+</pre>
+<p>This will synchronize only those files in <code>/tmp/demo/doc</code> that have suffix
+<code>.txt</code>.</p>
+<p>During synchronization, unmatched files from the <a title="Concepts and terms: bag" href="#term-bag">bag</a> are copied to the
+<a title="Concepts and terms: replica" href="#term-replica">replica</a> (except for the files deleted in that <a title="Concepts and terms: replica" href="#term-replica">replica</a>) and unmatched
+files from the <a title="Concepts and terms: replica" href="#term-replica">replica</a> are stored in the <a title="Concepts and terms: bag" href="#term-bag">bag</a>.
+Files at the same location relative to both containers are subject to
+<a href="version-tracking">version tracking</a> and, in some cases,
+<a href="conflict-resolution">conflict resolution</a>.</p>
+<p>A typical scenario of everyday <em>data-bag</em> use consists of three steps:</p>
+<ol>
+<li>Synchronize a <a title="Concepts and terms: replica" href="#term-replica">replica</a> to pick up recent changes.</li>
+<li>Work with the <a title="Concepts and terms: replica" href="#term-replica">replica</a>, make changes to files.</li>
+<li>Synchronize the changed <a title="Concepts and terms: replica" href="#term-replica">replica</a> when done.</li>
+</ol>
+<p>If you know that the <a title="Concepts and terms: bag" href="#term-bag">bag</a>'s contents haven't changed since you last
+synchronized the <a title="Concepts and terms: replica" href="#term-replica">replica</a>, you may skip step 1.</p>
+<p>
+<em>Data-bag</em> logs the operations that affect the <a title="Concepts and terms: bag" href="#term-bag">bag</a>'s contents. To review
+the log entries, enter the <code>--log</code> command, followed by an optional date or
+two dates constraining the time frame of interest. Without arguments, the
+command will display all the log entries for your bag. With a single date
+argument, the output will cover the period starting at that date. For example,
+command</p>
+<pre>
+<code>$ java -jar /mnt/databag.jar -d /mnt/ --log 2013-01-23
+</code>
+</pre>
+<p>will display the log entries made on or after January, 1st 2013.</p>
+<h2 id="toc000005">
+<a name="toc000005"> </a>Commands and options; disabling automatic sync</h2>
+<p>The arguments that you pass to <em>data-bag</em> on the command line always belong to
+a group that begins with a <em>switch</em>: a literal string with <code>--</code> prefix or a
+shorthand that begins with a dash. The switches, including shorthands, are
+case-sensitive.</p>
+<p>To <em>data-bag</em>, every switch is either a <a title="Concepts and terms: command" href="#term-command">command</a> or an <a title="Concepts and terms: option" href="#term-option">option</a>. The
+difference between the two is that you can enter multiple <a title="Concepts and terms: option" href="#term-option">options</a> on
+a command line, but no more than one <a title="Concepts and terms: command" href="#term-command">command</a>. The <a title="Concepts and terms: command" href="#term-command">command</a> determines
+the main action that <em>data-bag</em> will take when it runs. Some options may
+conflict with others, and some may not be compatible with the <a title="Concepts and terms: command" href="#term-command">command</a> you
+run. In that case you may encounter a warning or error when running <em>data-bag</em>.
+If you enter two or more commands on the command line, you will get an error,
+and none of the commands will run.</p>
+<p>For example, the <code>--log</code> and <code>--sync</code> switches shown above are commands, while
+<code>--medium</code> and <code>--local</code> are options. Thus, you can either display the log of
+operations, or synchronize the <a title="Concepts and terms: bag" href="#term-bag">bag</a>; but in both cases you are able to tell
+<em>data-bag</em> where your shared medium is mounted.</p>
+<p>As noted above, <em>data-bag</em> runs the synchronization automatically when its
+command line has <code>--medium</code> and <code>--local</code> options and nothing else. In fact,
+the program treats <code>--sync</code> as the default <a title="Concepts and terms: command" href="#term-command">command</a> and runs it whenever no
+other commands are present. In some cases, such as when you are configuring a
+<a title="Concepts and terms: bag" href="#term-bag">bag</a>, you may want to skip the automatic synchronization. To do that, add
+the <code>--nosync</code> option (shorthand <code>-N</code>) to the command line. For example,</p>
+<pre>
+<code>$ java -jar /mnt/databag.jar -d /mnt/ -C /tmp/demo1 -N
+</code>
+</pre>
+<p>will register <code>/tmp/demo1</code> as a new replica for the <a title="Concepts and terms: bag" href="#term-bag">bag</a>, but will not
+synchronize that directory.</p>
+<h2 id="toc000006">
+<a name="toc000006"> </a>Managing replicas</h2>
+<p>You can establish a <a title="Concepts and terms: replica" href="#term-replica">replica</a> in a directory, using the
+<code>--local</code> option or its <code>-C</code> shorthand. This is how you un-bag your files on a
+new machine. If the new replica's directory does not exist, it will be created
+for you. However, its parent directory must exist for the operation to succeed.</p>
+<p>A user can have multiple replicas of the same bag on any machine. One of these
+replicas is designated as the <a title="Concepts and terms: default replica" href="#term-default-replica">default replica</a> for the user's account.
+Commands that work with a replica use the <a title="Concepts and terms: default replica" href="#term-default-replica">default replica</a> unless there is
+a <code>--local</code> option on the command line. The first replica that a user creates
+becomes the <a title="Concepts and terms: default replica" href="#term-default-replica">default replica</a> for his or her account. To make another
+<a title="Concepts and terms: replica" href="#term-replica">replica</a> the <a title="Concepts and terms: default replica" href="#term-default-replica">default replica</a> for your account, enter the <code>--default</code>
+option after <code>--local</code> and respective replica's path:</p>
+<pre>
+<code>$ java -jar /mnt/databag.jar -d /mnt/ -C /tmp/demo1 --default
+</code>
+</pre>
+<p>Note that this command will also synchronize <code>/tmp/demo1</code> unless you add the
+<code>--nosync</code> option.</p>
+<p>To find out locations of replicas defined for the current user's account, use
+the <code>--list</code> command (or the shorthand <code>-l</code>) followed by the <code>replicas</code> keyword:</p>
+<pre>
+<code>$ java -jar /mnt/databag.jar -d /mnt/ -l replicas
+</code>
+</pre>
+<p>The output of this command will look like:</p>
+<blockquote>
+<pre>
+<code>  /tmp/demo 
+* /tmp/demo1
+</code>
+</pre>
+</blockquote>
+<p>The line with an asterisk denotes the current user's default replica.<br/>
+</p>
+<p>To remove information about a replica from the <a title="Concepts and terms: bag" href="#term-bag">bag</a>, log on as that
+replica's user and run the <code>--drop replica</code> command. The contents of the
+dropped replica's directory will remain intact, but <strong>information about the
+past operations with that replica will be lost.</strong>
+</p>
+<pre>
+<code>$ java -jar /mnt/databag.jar -d /mnt/ -C /tmp/demo1 --drop replica
+</code>
+</pre>
+<p>
+<a name="filtering-files"> </a>
+</p>
+<h2 id="toc000007">
+<a name="toc000007"> </a>Filtering files</h2>
+<p>There are many practical reasons to avoid tracking and synchronizing certain
+files, or to synchronize them on different schedules. Some files may be too
+large to fit on the shared medium. Others are generated automatically and can
+be rebuilt on any machine. Yet others you may not care about or have access
+to. Conversely, you may only be interested in tracking files that follow a
+certain name pattern, but unable to group them in a separate directory.</p>
+<p>To address these concerns, <em>data-bag</em> offers a mechanism of <a title="Concepts and terms: filter" href="#term-filter">filters</a>.
+<a title="Concepts and terms: filter" href="#term-filter">Filters</a> apply to locations of files relative to the <a title="Concepts and terms: bag" href="#term-bag">bag</a> or
+<a title="Concepts and terms: replica" href="#term-replica">replica</a> that stores them. A <a title="Concepts and terms: filter" href="#term-filter">filter</a> consists of two sets of
+<a title="Concepts and terms: location pattern" href="#term-pattern">patterns</a>. The first set <em>(includes)</em> limits eligible files to those
+matching any of its constituent <a title="Concepts and terms: location pattern" href="#term-pattern">patterns</a>. The second set
+<em>(excludes)</em> removes files matching its <a title="Concepts and terms: location pattern" href="#term-pattern">patterns</a> from the tentative
+list of files. Thus, a file passes the filter when its relative location
+matches one or more patterns on the list of includes and none of the patterns
+on the list of excludes. As an exception, when the list of includes is empty,
+all files that do not match excludes patterns pass the filter.<br/>
+</p>
+<p>
+<a title="Concepts and terms: filter" href="#term-filter">Filters</a> are stored in a <a title="Concepts and terms: bag" href="#term-bag">bag</a>, so when you need to apply one of
+them, you don't have to re-enter all its components. Each filter has a unique
+name within the <a title="Concepts and terms: bag" href="#term-bag">bag</a>. Filter names are case-insensitive. When choosing a
+name for your filter, you may want to use a short descriptive string so you
+can remember what it does by looking at the name. Note that filter names listed
+in the table below have special meanings to  <em>data-bag</em>:<br/>
+</p>
+<table cellpadding="4" border="1" cellspacing="0">
+<tr>
+<th>Name</th>
+<th>Meaning</th>
+</tr>
+<tr>
+<td>
+<code>all</code>
+</td>
+<td>
+The built-in filter that matches all files. This filter cannot be changed.
+</td>
+</tr>
+<tr>
+<td>
+<code>default</code>
+</td>
+<td>
+User-defined filter that <em>data-bag</em> applies to replicas that do not
+have their own default filters when no filter is explicitly selected for an
+operation. This filter does not exist in a new <a href="#term-bag">bag</a>
+until you create it. If there is no filter named <code>default</code>, and no
+default filter is designated for the replica, <em>data-bag</em> falls back to
+the built-in filter <code>all</code>.
+</td>
+</tr>
+</table>
+<p>The easiest way to define a <a title="Concepts and terms: filter" href="#term-filter">filter</a> and store it in a <a title="Concepts and terms: bag" href="#term-bag">bag</a> is to use the
+<code>--set</code> option and place all the filter's <a title="Concepts and terms: location pattern" href="#term-pattern">patterns</a> on the command line:</p>
+<pre>
+<code>$ java -jar /mnt/databag.jar -d /mnt -F 'Documents and spreadsheets' \
+--set '*.odt:*.ods:*.doc:*.xls' 'Welcome*'
+</code>
+</pre>
+<p>This command will create a <a title="Concepts and terms: filter" href="#term-filter">filter</a> called <em>"documents and spreadsheets"</em>
+(the name is not case-sensitive) that matches files with suffixes <code>.odt</code>,
+<code>.ods</code>, <code>.doc</code>, and <code>.xls</code> in the replica's directory (and none of its
+subdirectories), but excludes any files with names beginning with <em>Welcome</em>.
+Case sensitivity of the filter's <a title="Concepts and terms: location pattern" href="#term-pattern">patterns</a> depends on the underlying file
+system. <a title="Mostly POSIX-compliant systems" href="http://en.wikipedia.org/wiki/POSIX#Mostly_POSIX-compliant">POSIX</a> file systems are usually case-sensitive. Operations that do
+no affect any <a title="Concepts and terms: replica" href="#term-replica">replicas</a> (i.e. work with files in a <a title="Concepts and terms: bag" href="#term-bag">bag</a> only) perform
+case-sensitive pattern matching.</p>
+<p>The above command will also synchronize the default replica unless you add the
+<code>--nosync</code> option:</p>
+<blockquote>
+<pre>
+<code>Jan 25, 2013 12:24:08 AM name.livitski.databag.cli.Launcher setFilter
+INFO: Updating filter "documents and spreadsheets"
+Jan 25, 2013 12:24:08 AM name.livitski.databag.app.sync.SyncService synchronize 
+INFO: Synchronizing replica #1 for user@d1.data-bag.org at /tmp/demo with databa
+se at /mnt/databag using filter "documents and spreadsheets" ...
+</code>
+</pre>
+</blockquote>
+<p>Note that the filter name follows the <code>--filter</code> option, or its shorthand <code>-F</code>.
+Use that option to select a <a title="Concepts and terms: filter" href="#term-filter">filter</a> to manipulate, display, or apply to an
+operation.</p>
+<p>The <code>--set</code> option expects two arguments: a list of <em>include</em> <a title="Concepts and terms: location pattern" href="#term-pattern">patterns</a>, and
+a list of <em>exclude</em> <a title="Concepts and terms: location pattern" href="#term-pattern">patterns</a>. The patterns on each list are separated by
+the system-specific path separator string. On <a title="Mostly POSIX-compliant systems" href="http://en.wikipedia.org/wiki/POSIX#Mostly_POSIX-compliant">POSIX</a>-compliant systems, that
+string consists of a colon character, <code>:</code>. When a pattern on a list contains
+white space, you have to escape it to make sure the entire list is interpreted
+by the shell as a single argument. You may also have to escape the <code>?</code> and <code>*</code>
+characters within patterns to prevent their expansion by the shell. To make
+one of the lists empty, you can follow the <code>--set</code> option with an empty-string
+argument, if your shell allows that, or use a single path separator string
+otherwise. For example, command line</p>
+<pre>
+<code>$ java -jar /mnt/databag.jar -d /mnt -F 'No temp files' --set : '**/*.tmp' -N
+</code>
+</pre>
+<p>will create a filter that excludes all files with suffix <code>.tmp</code> anywhere in the
+<a title="Concepts and terms: bag" href="#term-bag">bag</a>'s or <a title="Concepts and terms: replica" href="#term-replica">replica</a>'s hierarchy.</p>
+<p>To apply a named filter to an operation that supports filters, use the
+<code>--filter</code> option, or its shorthand <code>-F</code>. You can append the <code>--invert</code> literal
+as the second argument to <code>--filter</code> to make the <a title="Concepts and terms: filter" href="#term-filter">filter</a> work in reverse,
+rejecting files that match it and accepting files that don't. For example,
+having defined the prevoius filter, you can list all files with suffix <code>.tmp</code>
+that are already in the <a title="Concepts and terms: bag" href="#term-bag">bag</a> by entering the command:</p>
+<pre>
+<code>$ java -jar /mnt/databag.jar -d /mnt -F 'No temp files' --invert -l
+</code>
+</pre>
+<p>To list filters in the <a title="Concepts and terms: bag" href="#term-bag">bag</a>, use the <code>--list</code> command (or its shorthand
+<code>-l</code>) with the <code>filters</code> keyword:</p>
+<pre>
+<code>$ java -jar /mnt/databag.jar -d /mnt -l filters
+</code>
+</pre>
+<p>Depending on what your default replica is, the output of this command may be:</p>
+<blockquote>
+<pre>
+<code>* all                                                                          
+  documents and spreadsheets                                                   
+  no temp files                                                                
+</code>
+</pre>
+</blockquote>
+<p>Note the asterisk on the first line. It marks the default filter applied to the
+current replica. Since our <a title="Concepts and terms: default replica" href="#term-default-replica">default replica</a> does not have a default filter,
+and no filter named <code>default</code> exists in the <a title="Concepts and terms: bag" href="#term-bag">bag</a>, this replica will have the
+built-in filter <code>all</code> applied to it. To change the default filter for a
+replica, append the <code>--default</code> literal to the <code>--filter</code> option:</p>
+<pre>
+<code>$ java -jar /mnt/databag.jar -d /mnt -F 'No temp files' --default -N
+</code>
+</pre>
+<p>Note that you may want to use the <code>--local</code> option as well unless you are
+configuring the <a title="Concepts and terms: default replica" href="#term-default-replica">default replica</a>. Now, the <code>--list</code> command line shown above
+will result in this output:</p>
+<blockquote>
+<pre>
+<code>  all                                                                          
+  documents and spreadsheets                                                   
+* no temp files                                                                
+</code>
+</pre>
+</blockquote>
+<p>
+<em>TODO: explain how to display a filter</em>
+</p>
+<p>
+<em>TODO: explain how to save a filter</em>
+</p>
+<p>
+<em>TODO: explain how to load a filter (note that --load is an option)</em>
+</p>
+<h2 id="toc000008">
+<a name="toc000008"> </a>Listing the bag's contents</h2>
+<p>You can list paths to all files in the <a title="Concepts and terms: bag" href="#term-bag">bag</a> using the <code>--list</code> command (or
+its shorthand <code>-l</code>) followed by the <code>files</code> keyword, or without the keyword:</p>
+<pre>
+<code>$ java -jar /mnt/databag.jar -d /mnt -l
+</code>
+</pre>
+<blockquote>
+<pre>
+<code>Jan 25, 2013 11:03:45 AM name.livitski.databag.cli.Launcher listFiles
+INFO: Applying filter "all"
+About_these_files.odt 
+Derivatives_of_Ubuntu.doc 
+Maxwell's_equations.odt 
+Payment_schedule.ods 
+Trigonometric_functions.xls 
+</code>
+</pre>
+</blockquote>
+<p>The listing will include relative locations of both current and deleted files
+matching the current <a title="Concepts and terms: filter" href="#term-filter">filter</a>. <em>Data-bag</em> sends the diagnostic output (two
+lines at the top) is sent to the standard error stream. You can separate it
+from the list output by redirecting either or both output streams.</p>
+<p>With the <code>--list</code> command you can display other data records stored in a
+<a title="Concepts and terms: bag" href="#term-bag">bag</a>, such as <a title="Concepts and terms: replica" href="#term-replica">replicas</a>, <a title="Concepts and terms: filter" href="#term-filter">filters</a>, and view detailed
+information about a <a title="Concepts and terms: filter" href="#term-filter">filter</a>. That is done by placing a keyword, such as
+<code>replicas</code>, <code>filters</code>, or <code>filter</code>, after the command. A keyword that follows
+the <code>--list</code> command can be typed using letters in any (or both) cases.<br/>
+</p>
+<p>
+<em>TODO: example of the --save option with a list command</em>
+</p>
+<p>
+<a name="version-tracking"> </a>
+</p>
+<h2 id="toc000009">
+<a name="toc000009"> </a>Tracking versions of stored files</h2>
+<p>When <em>data-bag</em> synchronizes a <a title="Concepts and terms: replica" href="#term-replica">replica</a>, it detects changes made to the
+local files. A changed local file is matched against the file at the same
+location in the <a title="Concepts and terms: bag" href="#term-bag">bag</a> as explained <a href="#conflict-resolution">below</a>. If there
+is no match, the local file is considered a different <a title="Concepts and terms: version" href="#term-version">version</a> of the bagged
+file. This usually happens when someone makes changes to the local file and
+saves them. If the clocks on all machines hosting <a title="Concepts and terms: replica" href="#term-replica">replicas</a> are set
+correctly, the changed file will have later modification date than the same
+file in the <a title="Concepts and terms: bag" href="#term-bag">bag</a>. With the default settings, <em>data-bag</em> saves changes made
+to the file in the <a title="Concepts and terms: bag" href="#term-bag">bag</a> as a new <a title="Concepts and terms: version" href="#term-version">version</a> of that file and retains all
+its prior <a title="Concepts and terms: version" href="#term-version">versions</a>.</p>
+<p>Thus, <em>data-bag</em> remembers the <a title="Concepts and terms: history" href="#term-history">history</a> of each file that it stores. Note
+that a file's <a title="Concepts and terms: history" href="#term-history">history</a> contains only those <a title="Concepts and terms: version" href="#term-version">versions</a> of the file
+that were available when it was synchronized. For instance, if you edit a
+document in the morning, save it, then edit it again in the afternoon, and
+only then synchronize it, the <a title="Concepts and terms: history" href="#term-history">history</a> of that document's file will <strong>not</strong>
+contain a record of the document as it looked during your lunch time. To have
+changes to your files recorded separately from later changes, synchronize the
+files that you are editing often.</p>
+<p>To review the history of a shared file, run the <code>--history</code> command (shorthand
+<code>-h</code>) followed by that file's path relative to the replica's root directory.
+For example,</p>
+<pre>
+<code>$ java -jar /mnt/databag.jar -d /mnt -h 'About_these_files.odt'
+</code>
+</pre>
+<p>yields this output:</p>
+<blockquote>
+<pre>
+<code>Jan 25, 2013 11:54:37 AM name.livitski.databag.cli.Launcher listVersions
+INFO: Applying filter "all"
+
+=== File # 1 with name 'About_these_files.odt' ===
+
+Version:           Id     Parent                Size Timestamp
+                    1     (none)              181512 2010-03-26 08:21:16
+(current)           2          1              182192 2013-01-25 11:54:03
+
+Found 1 existing, 0 renamed, and 0 deleted file(s)
+</code>
+</pre>
+</blockquote>
+<p>Note that the file has a <a title="Concepts and terms: file number" href="#term-file-number">record number</a> associated with it. These
+numbers uniquely identify files in the <a title="Concepts and terms: bag" href="#term-bag">bag</a>. Also note that each <a title="Concepts and terms: version" href="#term-version">version</a>
+record has a <a title="Concepts and terms: version number" href="#term-version-number">number</a>, too (labeled <code>Id</code> in the output). Those
+numbers are unique within the file's history.</p>
+<p>
+<em>TODO: cover the common arguments and options of the <code>--history</code> command</em>
+</p>
+<p>
+<a name="conflict-resolution"> </a>
+</p>
+<h2 id="toc000010">
+<a name="toc000010"> </a>Resolving conflicts among replicas</h2>
+<p>During synchronization, if there is a file at the same location relative to
+the <a title="Concepts and terms: bag" href="#term-bag">bag</a> and the <a title="Concepts and terms: replica" href="#term-replica">replica</a>, the local file's attributes are compared to
+those of the prior <a title="Concepts and terms: version" href="#term-version">versions</a> of the bagged file. If there is a match, the
+local file is replaced by the most recent <a title="Concepts and terms: version" href="#term-version">version</a> from the bag. If the
+local file is newer than all known <a title="Concepts and terms: version" href="#term-version">versions</a> of the bagged file and the
+<a title="Concepts and terms: replica" href="#term-replica">replica</a> has been synchronized to the most recent version of that file in
+the <a title="Concepts and terms: bag" href="#term-bag">bag</a> before, the local file is added to the <a title="Concepts and terms: bag" href="#term-bag">bag</a> as a new
+<a title="Concepts and terms: version" href="#term-version">version</a>. Otherwise, if there is no match, <em>data-bag</em> detects a
+<a title="Concepts and terms: conflict of versions" href="#term-conflict">conflict</a>. A conflict is a situation of ambiguity with respect to the
+order or content of <a title="Concepts and terms: version" href="#term-version">versions</a> in a file's history or detection and
+propagation of a file's deletion.</p>
+<p>By default, <em>data-bag</em> does not attempt to resolve conflicts and simply
+exits with an error message:</p>
+<blockquote>
+<pre>
+<code>Jan 25, 2013 18:46:00 AM name.livitski.databag.cli.Launcher run
+SEVERE: Please specify how to resolve the conflict between local file /tmp/demo1
+/About_these_files.odt (size = 181875, modified at Fri Jan 25 18:44:53 EST 2013)
+and version 2 (file=1, base=1, size=182192, modified=2013-01-25 11:54:03.0). The
+file has a synchronization record of file #1 in replica #2 to version #1
+</code>
+</pre>
+</blockquote>
+<p>To proceed with synchronization, you must tell <em>data-bag</em> how to resolve the
+conflict. Add the <code>--default-action</code> option (or its shorthand <code>-A</code>) followed by
+one of the keywords from the table below:</p>
+<table cellpadding="4" border="1" cellspacing="0">
+<tr>
+<th>Keyword</th>
+<th>Meaning</th>
+</tr>
+<tr>
+<td>
+<code>NONE</code>
+</td>
+<td>
+Means that no action will be taken to synchronize the affected file. In other
+words, with <code>-A NONE</code> switch, files with a conflict are simply
+skipped.
+</td>
+</tr>
+<tr>
+<td>
+<code>UPDATE</code>
+</td>
+<td>
+Tells <em>data-bag</em> to make the local file the most recent version of the
+bagged file and add it to that file's history as such. The side effect is that
+the local file may have its modification time adjusted to follow the
+modification time of the conflicting file in the bag.
+</td>
+</tr>
+<tr>
+<td>
+<code>DISCARD</code>
+</td>
+<td>
+Asks <em>data-bag</em> to replace all conflicting local files with recent
+versions from the shared medium. <strong>This mode can cause data loss, so use
+it with caution.</strong>
+</td>
+</tr>
+</table>
+<p>
+<em>TODO: describe the granularity of actions and the use of filters and
+patterns to address that</em>
+</p>
+<p>
+<a name="deleted-files"> </a>
+</p>
+<h2 id="toc000011">
+<a name="toc000011"> </a>Deleted files</h2>
+<p>
+<em>Data-bag</em> detects files that have been deleted from the replica after it was
+last synchronized. During the next synchronization of that replica, those files
+are marked deleted in the <a title="Concepts and terms: bag" href="#term-bag">bag</a>. The deletion will propagate to other
+<a title="Concepts and terms: replica" href="#term-replica">replicas</a> as they are synchronized. Note that a <a title="Concepts and terms: bag" href="#term-bag">bag</a> retains histories of
+its files even after they are marked deleted to allow you to
+<a href="#restoring-files">restore</a> such files later. You can also create a new file in
+a <a title="Concepts and terms: replica" href="#term-replica">replica</a> at the same location as the previously deleted file. The new file
+will have a separate <a title="Concepts and terms: history" href="#term-history">history</a> if you synchronize the <a title="Concepts and terms: replica" href="#term-replica">replica</a> that you
+create it in after the old file's deletion and before the new file's creation.</p>
+<p>The <code>--history</code> command with a location argument lists versions of the existing
+file and histories of all deleted files at the same relative location. For
+example,</p>
+<p>
+<em>TODO: example with multiple histories for the same name</em>
+</p>
+<p>Note that deleted file records have their own numbers. Therefore, when you
+enter a file's <a title="Concepts and terms: file number" href="#term-file-number">record number</a>, you will be shown only the history
+of that particular file.</p>
+<p>When you rename or move a file within a <a title="Concepts and terms: replica" href="#term-replica">replica</a>, <em>data-bag</em> currently
+treats such event as two operations:</p>
+<ul>
+<li>deletion of the file at its old location, and</li>
+<li>creation of a file at the new location</li>
+</ul>
+<p>In other words, continuity of the file's <a title="Concepts and terms: history" href="#term-history">history</a> is not preserved. There
+are plans to implement detection of file renames and moves in future, even
+though often such detection cannot be done reliably without user's
+intervention.</p>
+<p>
+<a name="restoring-files"> </a>
+</p>
+<h2 id="toc000012">
+<a name="toc000012"> </a>Restoring old versions and deleted files</h2>
+<p>
+<em>Data-bag</em> allows you to restore older <a title="Concepts and terms: version" href="#term-version">versions</a> of existing files
+and the files you deleted after a synchronization. There are two different
+<a title="Concepts and terms: command" href="#term-command">commands</a> that restore files, each operating in its own way.</p>
+<p>The first method is useful when you need to obtain historic files for a
+temporary use. For example, you may want to check how a certain document looked
+a week ago, make a copy of it, or compare it with the current <a title="Concepts and terms: version" href="#term-version">version</a>. To
+obtain such temporary images of historic files, use the <code>--restore</code> command
+described in this chapter.</p>
+<p>The other method is needed when you decide to discard unwanted changes to your
+files after you have synchronized them with a <a title="Concepts and terms: bag" href="#term-bag">bag</a>. For example, you might
+have made a computation in a spreadsheet, saved and synchronized it. A week
+later you may realize that the formulas that you used were incorrect, and
+decide to start from scratch. To roll back changes that are already stored in
+a <a title="Concepts and terms: bag" href="#term-bag">bag</a> you may want to run the <code>--undo</code> command, described
+<a href="#undoing-changes">later</a>.</p>
+<p>Restoration of historic files for a temporary use requires knowledge of two
+things: original locations and version numbers of the files being restored.
+For simplicity, consider a single file restoration first. If you want to see
+how the file <code>About_these_files.odt</code> looked before it was modified, and you
+<a href="#version-tracking">know</a> that there are two <a title="Concepts and terms: version" href="#term-version">versions</a> of that file
+in the <a title="Concepts and terms: bag" href="#term-bag">bag</a>, you can run <code>--restore</code> command (or its shorthand <code>-r</code>) as
+follows:</p>
+<pre>
+<code>$ java -jar /mnt/databag.jar -d /mnt -r 'About_these_files.odt' --vn 1
+</code>
+</pre>
+<p>This will result in a copy of that file's <a title="Concepts and terms: version" href="#term-version">version</a> with
+<a title="Concepts and terms: version number" href="#term-version-number">number</a> <code>1</code> restored to the default replica in <code>/tmp/demo</code>:</p>
+<blockquote>
+<pre>
+<code>Jan 25, 2013 8:39:50 PM name.livitski.databag.cli.PointInTimeAbstractCommand res
+olveFileSpec
+INFO: Applying filter "no temp files"
+Jan 25, 2013 8:39:50 PM name.livitski.databag.app.sync.RestoreService restore
+INFO: Restoring version 1 (file=1, base=0, size=181512, modified=2010-03-26 08:2
+1:16.0) to /tmp/demo/About_these_files.odt ...
+</code>
+</pre>
+</blockquote>
+<p>The file's relative location follows the <code>-r</code> command on the command line. The
+<code>--vn</code> option specifies the <a title="Concepts and terms: version number" href="#term-version-number">version number</a> to be restored. Observe
+that the historic <a title="Concepts and terms: version" href="#term-version">version</a> is written to its <a title="Concepts and terms: replica" href="#term-replica">replica</a> location, replacing
+the current file.</p>
+<pre>
+<code>$ ls -l /tmp/demo/About_these_files.odt
+</code>
+</pre>
+<blockquote>
+<pre>
+<code>-rw-r--r-- 1 user users 181512 2010-03-26 08:21 /tmp/demo/About_these_files.odt
+</code>
+</pre>
+</blockquote>
+<p>
+<em>Data-bag</em> will synchronize the file with the <a title="Concepts and terms: bag" href="#term-bag">bag</a> before overwriting it, so
+that file can be retrieved later. Since <code>--restore</code> command performs temporary
+restore, the file's old <a title="Concepts and terms: version" href="#term-version">version</a> will be replaced again with the current one
+next time you synchronize the <a title="Concepts and terms: replica" href="#term-replica">replica</a>.</p>
+<p>If you want to compare the
+current version of the file with the original version, or otherwise avoid
+confusion between current and historic files, you may tell <em>data-bag</em> to
+restore that file elsewhere. To achieve that, add a <code>--save</code> option (or its
+shorthand <code>-o</code>) to the command line:</p>
+<pre>
+<code>$ java -jar /mnt/databag.jar -d /mnt -r 'About_these_files.odt' --vn 1 \
+-o /tmp/about.odt
+</code>
+</pre>
+<p>The argument of the <code>--save</code> option is either an absolute location of the
+restored file or a location relative to the current directory. If you restore
+a single file into a different location in the current <a title="Concepts and terms: replica" href="#term-replica">replica</a>, <em>data-bag</em>
+will add it to the <a title="Concepts and terms: bag" href="#term-bag">bag</a> right away, without the need for synchronization.
+However, <em>data-bag</em> will not overwrite any existing files when restoring with
+the <code>--save</code> option.</p>
+<p>When the above command is run without a <a title="Concepts and terms: version number" href="#term-version-number">version number</a>, <em>data-bag</em> restores
+the most recent version of the file, i.e.</p>
+<pre>
+<code>$ java -jar /mnt/databag.jar -d /mnt -r 'About_these_files.odt'
+</code>
+</pre>
+<p>will cause the subsequent command</p>
+<pre>
+<code>$ ls -l /tmp/demo/About_these_files.odt
+</code>
+</pre>
+<p>produce this output:</p>
+<blockquote>
+<pre>
+<code>-rw-r--r-- 1 user users 182192 2013-01-25 11:54 /tmp/demo/About_these_files.odt
+</code>
+</pre>
+</blockquote>
+<p>You can also restore the most recent version of a file as of a specific moment
+in the past, by adding <code>--as-of</code> option (or its shortcut <code>-a</code>). Note that
+<code>--as-of</code> option cannot be used with <code>--vn</code>.</p>
+<pre>
+<code>$ java -jar /mnt/databag.jar -d /mnt -r 'About_these_files.odt' \
+-a 2012-12-31 22:12:12
+</code>
+</pre>
+<p>Note that the time argument at the end of this line is optional. If you omit
+it, <em>data-bag</em> assumes <code>00:00:00</code> (midnight at the beginning of the calendar
+day) as the target time.</p>
+<p>
+<em>TODO: show how to restore deleted files</em>
+</p>
+<p>
+<em>TODO: explain the use of file numbers when restoring files</em>
+</p>
+<p>When you don't have a fixed <a title="Concepts and terms: version number" href="#term-version-number">version number</a> to restore, you can restore
+multiple files with relative locations matching a <a title="Concepts and terms: location pattern" href="#term-pattern">pattern</a>. You can use the
+<code>--save</code> option with such command if the argument points to an empty directory
+that is neither the current <a title="Concepts and terms: replica" href="#term-replica">replica</a>'s root nor any of its descendants. For
+example, commands</p>
+<pre>
+<code>$ mkdir -p ~/Desktop/2012
+$ java -jar /mnt/databag.jar -d /mnt -r '*.odt' -a 2013-01-01 -o ~/Desktop/2012
+</code>
+</pre>
+<p>will result in all files with suffix <code>.odt</code> from the root directory of your bag
+that had versions modified before the end of 2012 having copies of these
+versions restored to the new directory <code>Desktop/2012</code> in your the home area of
+your user account.</p>
+<p>If any of the restored files have to be written to a location within the
+current replica, e.g. by following a symbolic link, the operation will fail.</p>
+<p>
+<a name="undoing-changes"> </a>
+</p>
+<h2 id="toc000013">
+<a name="toc000013"> </a>Rolling back changes to files</h2>
+<p>
+<em>TODO: describe the undo operation</em>
+</p>
+<p>
+<em>TODO: explain how undo deletes and un-deletes files</em>
+</p>
+<p>
+<a name="purge-command"> </a>
+</p>
+<h2 id="toc000014">
+<a name="toc000014"> </a>Purging old versions from shared storage</h2>
+<p>When <em>data-bag</em> updates a <a title="Concepts and terms: bag" href="#term-bag">bag</a>, it retains all deleted files and historical
+<a title="Concepts and terms: version" href="#term-version">versions</a> of existing files. Thus, <a title="Concepts and terms: bag" href="#term-bag">bags</a> tend to grow in size
+during each synchronization. To avoid running out of space on the shared
+medium, you may occasionally want to purge old versions and deleted files.
+To do that, use the <code>--purge</code> command followed by a date in <code>yyyy-mm-dd</code>
+format:</p>
+<pre>
+<code>$ java -jar /mnt/databag.jar -d /mnt --purge 2012-01-01
+</code>
+</pre>
+<p>The date on the above command line denotes the beginning of a new <a title="Concepts and terms: epoch" href="#term-epoch">epoch</a>.
+To specify the <a title="Concepts and terms: epoch" href="#term-epoch">epoch</a> more precisely, you may add a time argument following
+the date. The time format is <code>hh:mm:ss[.f]</code>, where hour is taken from a 24-hour
+clock, and fractions of a second may be omitted:</p>
+<pre>
+<code>$ java -jar /mnt/databag.jar -d /mnt --purge 2013-01-24 22:02:01
+</code>
+</pre>
+<p>When no time is specified, <code>00:00:00</code> (midnight at the beginning of the calendar
+day) is assumed.</p>
+<p>
+<a title="Concepts and terms: bag" href="#term-bag">Bags</a> that were never purged have their <a title="Concepts and terms: epoch" href="#term-epoch">epochs</a>
+beginning at the earliest modified time of any <a title="Concepts and terms: version" href="#term-version">version</a> they store.
+<em>Data-bag</em> is not required to retain <a title="Concepts and terms: version" href="#term-version">versions</a>, deleted files, or log
+records beyond the current <a title="Concepts and terms: epoch" href="#term-epoch">epoch</a>, and attempts to delete that data
+permanently. Notable exceptions are the current versions of existing files that
+haven't been modified since the epoch began, and, in some cases, version
+records needed to restore other versions modified during the current <a title="Concepts and terms: epoch" href="#term-epoch">epoch</a>.
+<strong>The purge operation is irreversible, so use it with caution.</strong>
+</p>
+<h2 id="toc000015">
+<a name="toc000015"> </a>Encrypting your bag</h2>
+<p>To help you prevent unauthorized access to <a title="Concepts and terms: bag" href="#term-bag">bags</a>, <em>data-bag</em> supports
+encryption of data on the shared medium. <em>Data-bag</em> uses symmetric cryptography
+to encrypt <a title="Concepts and terms: bag" href="#term-bag">bags</a> and, currently, applies a single key to each <a title="Concepts and terms: bag" href="#term-bag">bag</a> in
+its entirety. Therefore, you should use long randomized keys for <a title="Concepts and terms: bag" href="#term-bag">bag</a>
+encryption and store them securely.</p>
+<p>The <em>data-bag</em>'s interface allows you to set up encryption and estblish a key
+when you create a <a title="Concepts and terms: bag" href="#term-bag">bag</a>. Then, you have to feed the same key to the software
+every time you run an operation on the encrypted <a title="Concepts and terms: bag" href="#term-bag">bag</a>. In both cases, you
+need to add the <code>--encrypt</code> option (or the shorthand <code>-E</code>) to the command line.</p>
+<p>The arguments to the <code>--encrypt</code> option differ depending on how you provide the
+key to <em>data-bag</em>:</p>
+<ul>
+<li>
+<p>To submit the key via standard input, enter the <code>stdin</code> keyword following
+the <code>--encrypt</code> option. Note that your terminal will echo the key unless you
+redirect the standard input.</p>
+<pre>
+<code>$ java -jar /mnt/databag.jar -d /mnt --create -E stdin
+</code>
+</pre>
+</li>
+<li>
+<p>To enter the key on the terminal without echo, use the <code>ask</code> keyword. This
+option requires Java runitme version 6 or newer and cannot be used with
+input or output redirection.</p>
+</li>
+<li>
+<p>To enter the key on the command line, or use a shell variable, append the
+<code>key</code> keyword and the key argument or variable to the command line after the
+<code>--encrypt</code> option. This is the only method that allows you to add line
+separator characters to your key.</p>
+<pre>
+<code>$ java -jar /mnt/databag.jar -d /mnt -l -E key "$BAG_KEY"
+</code>
+</pre>
+</li>
+</ul>
+<p>The <code>--encrypt</code> option is insensitive to the letter case of its keywords.
+Given the <code>--encrypt</code> option without arguments, <em>data-bag</em> defaults to asking
+user to enter the key via terminal (as in the <code>ask</code> mode) in the environments
+supporting that. Where the terminal input is not supported, the software issues
+a warning message and falls back to the standard input method.</p>
+<p>
+<em>Data-bag</em> does not accept the space character (code <code>32</code>) in the encryption
+keys. To use a passphrase for <a title="Concepts and terms: bag" href="#term-bag">bag</a> encryption <em>(recommended)</em>, you need an
+alternative way to separate its words. One option is to delimit them with
+punctuation marks.</p>
+<p>
+<em>Data-bag</em> currently supports two encryption algorithms: <em>AES</em> and <em>XTEA</em>. The
+default encryption algorithm for <a title="Concepts and terms: bag" href="#term-bag">bags</a> is <em>AES</em>. To use the alternative
+algorithm, append keywords <code>--cipher xtea</code> to the <code>--encrypt</code> option:</p>
+<pre>
+<code>$ java -jar /mnt/databag.jar -d /mnt/teabag --create -E ask --cipher xtea
+</code>
+</pre>
+<p>Although <em>data-bag</em>'s interface does not yet allow you to encrypt or decrypt an
+existing <a title="Concepts and terms: bag" href="#term-bag">bag</a>, or change the encryption algorithm or key, you can still do
+that by calling the database management library embedded in the software
+directly:</p>
+<pre>
+<code>$ java -cp /mnt/databag.jar org.h2.tools.ChangeFileEncryption \
+-dir /mnt/teabag/databag/ -db databag -decrypt "password" -cipher XTEA 
+</code>
+</pre>
+<p>For details about the encryption management tool embedded in <em>data-bag</em>, please
+refer to the the <code>ChangeFileEncryption</code> command reference in the
+<a href="http://h2database.com">H2 database</a> documentation, available online at
+<a href="http://h2database.com/html/features.html#file_encryption">http://h2database.com/html/features.html#file_encryption</a>. You can obtain the
+tool's usage summary by running it without arguments:</p>
+<pre>
+<code>$ java -cp /mnt/databag.jar org.h2.tools.ChangeFileEncryption
+</code>
+</pre>
+<p>The directory argument to the <code>ChangeFileEncryption</code> tool must point to the
+<code>databag</code> directory of the medium with your <a title="Concepts and terms: bag" href="#term-bag">bag</a>. The database argument
+must be <code>databag</code>, too.</p>
+<h2 id="toc000016">
+<a name="toc000016"> </a>Concepts and terms used in this manual</h2>
+<dl>
+
+<dt id="term-bag">
+<a name="term-bag"> </a>Bag</dt>
+<dd>a directory containing a database with histories of certain files
+maintained by the <em>data-bag</em> software, usually stored on a
+shared medium.</dd>
+
+<dt id="term-command">
+<a name="term-command"> </a>Command</dt>
+<dd>a group of <em>data-bag</em> arguments that begins with a certain literal
+string or a shorthand string. The strings that begin <em>data-bag</em>'s
+commands on a command line, including shorthands, are listed in the <i>
+<b>
+TODO: provide</b> commands reference</i>. Unlike <a href="#option">options</a>,
+commands are mutually exclusive, i.e. you cannot enter more than one command on
+a command line.</dd>
+
+<dt id="term-conflict">
+<a name="term-conflict"> </a>Conflict of versions</dt>
+<dd>a situation of ambiguity when <em>data-bag</em> operating on a
+<a href="#term-bag">bag</a> and a <a href="#term-replica">replica</a> requires
+a <a href="#conflict-resolution">user's intervention</a> to prevent the loss of
+meaningful data.</dd>
+
+<dt id="term-default-replica">
+<a name="term-default-replica"> </a>Default replica</dt>
+<dd>a <a href="#term-replica">replica</a> used by operations with local files
+under a certain user account on a certain machine unless another replica is
+explicitly selected for the operation.</dd>
+
+<dt id="term-epoch">
+<a name="term-epoch"> </a>Epoch</dt>
+<dd>the time period that began at a certain moment depending on the
+<a href="#term-bag">bag</a>'s parameters and history and continues at present.
+A <a href="#term-bag">bag</a> is not required to retain artifacts that are
+older than its epoch. The epoch can be reset for a <a href="#term-bag">bag</a>
+by running the <a href="#purge-command">
+<code>--purge</code> command</a>.
+</dd>
+
+<dt id="term-file-number">
+<a name="term-file-number"> </a>File number</dt>
+<dd>a unique number associated with each file's record in a
+<a href="#term-bag">bag</a>.</dd>
+
+<dt id="term-filter">
+<a name="term-filter"> </a>Filter</dt>
+<dd>a group of rules that apply to locations of files relative to the
+<a href="#term-bag">bag</a> or <a href="#term-replica">replica</a> that stores
+them and determines eligibility of each file for an operation. The components
+and application of filters are explained in the
+<a href="#filtering-files">Filtering files</a> chapter.
+</dd>
+
+<dt id="term-history-file">
+<a name="term-history-file"> </a>History of a file</dt>
+<dd>a set of <a href="#term-version">version</a> records of a file in a
+<a href="#term-bag">bag</a> organized as a tree.</dd>
+
+<dt id="term-pattern">
+<a name="term-pattern"> </a>Location pattern</dt>
+<dd>a string of characters that can be matched against paths to files relative
+to a <a href="#term-bag">bag</a> or replica's root directory. <em>Data-bag</em>
+uses the <a href="http://ant.apache.org/manual/dirtasks.html#patterns">Apache
+Ant syntax for patterns</a>, which is similar to <dfn>Unix globbing</dfn>
+and allows to match files across directory levels.</dd>
+
+<dt id="term-option">
+<a name="term-option"> </a>Option</dt>
+<dd>a group of <em>data-bag</em> arguments that begins with a certain literal
+string or a shorthand string. The strings that begin <em>data-bag</em>'s
+options on a command line, including shorthands, are listed in the <i>
+<b>
+TODO: provide</b> options reference</i>. Options can be combined on a command
+line with <a href="#commands">commands</a> and other options.</dd>
+
+<dt id="term-replica">
+<a name="term-replica"> </a>Replica</dt>
+<dd>a directory containing local copies of files tracked and synchronized with
+a certain <a href="#term-bag">bag</a> by the <em>data-bag</em> software. The
+<a href="#term-bag">bag</a> remembers locations of replicas for each machine
+and user account combination it is used with.</dd>
+
+<dt id="term-version-number">
+<a name="term-version-number"> </a>Version number</dt>
+<dd>a number associated with the <a href="#term-version">version of a
+file</a>. Version numbers are unique within the file's history.</dd>
+
+<dt id="term-version">
+<a name="term-version"> </a>Version of a file</dt>
+<dd>a record of the file's contents and attributes made at a certain moment in
+time, such that: (i) the file is added to the bag before its contents or
+attributes change or the file is deleted; and (ii) the file is synchronized at
+least once while having these contents and attributes; and (iii) the file's
+contents or attributes are different from those of the other versions of the
+same file.</dd>
+
+<!--dt id="term-___"><a name="term-___"> </a>...</dt>
+<dd><b>TODO:</b> <i>Add terms to this list, in alphabetical order, as they
+are encountered</i></dd-->
+
+</dl>
+<h2 id="toc000017">
+<a name="toc000017"> </a>Your feedback and suggestions</h2>
+<p>You are welcome to submit feedback as well as your suggestions about the
+software. If you would like to contribute to the project, we are looking
+forward to working with you!</p>
+<p>You can send a message to the project's team via the
+<a href="http://www.livitski.name/contact">Contact page</a> at <a href="http://www.livitski.name/">http://www.livitski.name/</a>
+or via the <a href="http://data-bag.github.com/">project's page on GitHub</a>.</p>
+<h3>Thank you for using <em>data-bag</em>!</h3>
+
+</body>
+</html>
