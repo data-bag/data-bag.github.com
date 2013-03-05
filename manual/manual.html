@@ -7,11 +7,11 @@
 <link rel="stylesheet" type="text/css" href="../stylesheets/pygment_trac.css" media="screen"/>
 <link rel="stylesheet" type="text/css" href="manual.css" media="screen"/>
 <link rel="stylesheet" type="text/css" href="../stylesheets/print.css" media="print"/>
-<title>data-bag user's guide</title>
+<title>data-bag manual</title>
 </head>
 <body>
 <h1>
-<em>Data-bag</em> user's guide</h1>
+<em>Data-bag</em> manual</h1>
 <p>
 <small>Copyright © 2010-2013 Konstantin Livitski. License terms apply.
 Please read file <a title="NOTICE file" href="https://github.com/data-bag/code/blob/master/NOTICE.md">
@@ -21,67 +21,178 @@ Please read file <a title="NOTICE file" href="https://github.com/data-bag/code/b
 </p>
 <hr/>
 <p>
-<em>This manual is a work in progress. You can obtain the summary and descriptions
-of all command-line options by running data-bag without arguments.</em>
+<em>This manual is a work in progress.</em>
 </p>
 <p>
-<em>Last modified: February, 19 2013</em>
+<em>Last modified: March, 5 2013</em>
 </p>
 <hr/>
 <h2>Contents</h2>
-<ul>
-<li>
+<div class="toc0">
+
+<div>
 <a href="#toc000001">What is data-bag?</a>
+</div>
+<div>
+<a href="#toc000002">Data-bag user's guide</a>
+</div>
+<ul class="toc1">
+<li>
+<a href="#toc000003">Prerequisites</a>
 </li>
 <li>
-<a href="#toc000002">Prerequisites</a>
+<a href="#toc000004">Getting started</a>
 </li>
 <li>
-<a href="#toc000003">Getting started</a>
+<a href="#toc000005">Synchronizing files</a>
 </li>
 <li>
-<a href="#toc000004">Synchronizing files</a>
+<a href="#toc000006">Commands and options; disabling automatic sync</a>
 </li>
 <li>
-<a href="#toc000005">Commands and options; disabling automatic sync</a>
+<a href="#toc000007">Managing replicas</a>
 </li>
 <li>
-<a href="#toc000006">Managing replicas</a>
+<a href="#toc000008">Filtering files</a>
 </li>
 <li>
-<a href="#toc000007">Filtering files</a>
+<a href="#toc000009">Listing the bag's contents</a>
 </li>
 <li>
-<a href="#toc000008">Listing the bag's contents</a>
+<a href="#toc000010">Tracking versions of stored files</a>
 </li>
 <li>
-<a href="#toc000009">Tracking versions of stored files</a>
+<a href="#toc000011">Resolving conflicts among replicas</a>
 </li>
 <li>
-<a href="#toc000010">Resolving conflicts among replicas</a>
+<a href="#toc000012">Deleted files</a>
 </li>
 <li>
-<a href="#toc000011">Deleted files</a>
+<a href="#toc000013">Restoring old versions and deleted files</a>
 </li>
 <li>
-<a href="#toc000012">Restoring old versions and deleted files</a>
+<a href="#toc000014">Rolling back changes to files</a>
 </li>
 <li>
-<a href="#toc000013">Rolling back changes to files</a>
+<a href="#toc000015">Purging old versions from a bag</a>
 </li>
 <li>
-<a href="#toc000014">Purging old versions from shared storage</a>
-</li>
-<li>
-<a href="#toc000015">Encrypting your bag</a>
-</li>
-<li>
-<a href="#toc000016">Concepts and terms used in this manual</a>
-</li>
-<li>
-<a href="#toc000017">Your feedback and suggestions</a>
+<a href="#toc000016">Encrypting your bag</a>
 </li>
 </ul>
+<div>
+<a href="#toc000017">Data-bag command line reference</a>
+</div>
+<ul class="toc1">
+<li>
+<a href="#toc000018">Commands</a>
+</li>
+<ul class="toc2">
+<li>
+<a href="#switch-help">-?, --help</a>
+</li>
+<li>
+<a href="#switch-drop">--drop</a>
+</li>
+<li>
+<a href="#switch-history">-h, --history</a>
+</li>
+<li>
+<a href="#switch-list">-l, --list</a>
+</li>
+<li>
+<a href="#switch-log">--log</a>
+</li>
+<li>
+<a href="#switch-purge">--purge</a>
+</li>
+<li>
+<a href="#switch-restore">-r, --restore</a>
+</li>
+<li>
+<a href="#switch-sync">-s, --sync</a>
+</li>
+<li>
+<a href="#switch-undo">-u, --undo</a>
+</li>
+</ul>
+<li>
+<a href="#toc000019">Options</a>
+</li>
+<ul class="toc2">
+<li>
+<a href="#switch-default-action">-A, --default-action</a>
+</li>
+<li>
+<a href="#switch-as-of">-a, --as-of</a>
+</li>
+<li>
+<a href="#switch-allow-time-diff">--allow-time-diff</a>
+</li>
+<li>
+<a href="#switch-local">-C, --local</a>
+</li>
+<li>
+<a href="#switch-cds">--cds</a>
+</li>
+<li>
+<a href="#switch-compress">--compress</a>
+</li>
+<li>
+<a href="#switch-create">--create</a>
+</li>
+<li>
+<a href="#switch-medium">-d, --medium</a>
+</li>
+<li>
+<a href="#switch-dcs">--dcs</a>
+</li>
+<li>
+<a href="#switch-encrypt">-E, --encrypt</a>
+</li>
+<li>
+<a href="#switch-filter">-F, --filter</a>
+</li>
+<li>
+<a href="#switch-fn">--fn</a>
+</li>
+<li>
+<a href="#switch-load">--load</a>
+</li>
+<li>
+<a href="#switch-lob-size">--lob-size</a>
+</li>
+<li>
+<a href="#switch-nosync">-N, --nosync</a>
+</li>
+<li>
+<a href="#switch-nobanner">--nobanner</a>
+</li>
+<li>
+<a href="#switch-save">-o, --save</a>
+</li>
+<li>
+<a href="#switch-set">--set</a>
+</li>
+<li>
+<a href="#switch-upgrade-db">--upgrade-db</a>
+</li>
+<li>
+<a href="#switch-verbose">-v, --verbose</a>
+</li>
+<li>
+<a href="#switch-vn">--vn</a>
+</li>
+</ul>
+</ul>
+<div>
+<a href="#toc000020">Concepts and terms used in this manual</a>
+</div>
+<div>
+<a href="#toc000021">Your feedback and suggestions</a>
+</div>
+
+</div>
 <h2 id="toc000001">
 <a name="toc000001"> </a>What is <em>data-bag</em>?</h2>
 <p>
@@ -99,7 +210,10 @@ those copies. It will also store histories of changes to synchronized files,
 allowing you to review past changes, resolve conflicting updates, and restore
 corrupt or deleted files.</p>
 <h2 id="toc000002">
-<a name="toc000002"> </a>Prerequisites</h2>
+<a name="toc000002"> </a>
+<em>Data-bag</em> user's guide</h2>
+<h3 id="toc000003">
+<a name="toc000003"> </a>Prerequisites</h3>
 <p>The <em>data-bag</em> executable is usually a single file named <code>databag.jar</code>
 that you can run on different machines. A machine can run that file if it has a
 <dfn>Java runtime</dfn> installed. The tool is compatible with:</p>
@@ -131,8 +245,8 @@ containing a copy of the <em>data-bag</em> executable <code>databag.jar</code> a
 your shell can find the Java runtime executable on its search path.
 These conditions are not necessary, and <em>data-bag</em> will work in other
 environments if you make adjustments to the commands you enter.</p>
-<h2 id="toc000003">
-<a name="toc000003"> </a>Getting started</h2>
+<h3 id="toc000004">
+<a name="toc000004"> </a>Getting started</h3>
 <p>To run the standard <em>data-bag</em> executable, use the <code>-jar</code> option of
 the Java runtime command:</p>
 <pre>
@@ -162,9 +276,11 @@ Command: -? | -l | -h | -r | --drop | --log | --purge | [-s]
 </pre>
 <p>.....</p>
 </blockquote>
-<p>To create a <a title="Concepts and terms: bag" href="#term-bag">bag</a> in the current directory, add the <code>--create</code> option to the
-previous command line. To work with a medium at another location, add the
-<code>--medium</code> switch (or its shorthand <code>-d</code>) with the path to that medium:</p>
+<p>To create a <a title="Concepts and terms: bag" href="#term-bag">bag</a> in the current directory, add the <a title="--create switch" href="#switch-create">
+<code>--create</code> option</a>
+to the previous command line. To work with a medium at another location, add the
+<a title="--medium switch" href="#switch-medium">
+<code>--medium</code> switch</a> (or its shorthand <code>-d</code>) with the path to that medium:</p>
 <pre>
 <code>$ java -jar /mnt/databag.jar -d /mnt --create
 </code>
@@ -207,8 +323,9 @@ same bag on any machine, but only one of these replicas is treated as the
 <a title="Concepts and terms: default replica" href="#term-default-replica">default replica</a> for the user's account. The first replica you create on
 a machine is designated as its <a title="Concepts and terms: default replica" href="#term-default-replica">default replica</a> for your account unless
 you switch the default to another <a title="Concepts and terms: replica" href="#term-replica">replica</a>.</p>
-<p>A directory becomes a <a title="Concepts and terms: replica" href="#term-replica">replica</a> of your <a title="Concepts and terms: bag" href="#term-bag">bag</a> when you run
-<em>data-bag</em> with the <code>--local</code> option (or its shorthand <code>-C</code>) and the
+<p>A directory becomes a <a title="Concepts and terms: replica" href="#term-replica">replica</a> of your <a title="Concepts and terms: bag" href="#term-bag">bag</a> when you run <em>data-bag</em>
+with the <a title="--local switch" href="#switch-local">
+<code>--local</code> option</a> (or its shorthand <code>-C</code>) and the
 path to that directory. The same option is used to operate on a non-default
 <a title="Concepts and terms: replica" href="#term-replica">replica</a> for your account:</p>
 <pre>
@@ -223,7 +340,9 @@ synchronized, i.e. added to your new <a title="Concepts and terms: bag" href="#t
 the same as long as you are using the same executable. These lines contain
 general information about the tool and the project. When running
 <em>data-bag</em> from a script, you may want to omit those lines from
-the output. To do that, add the <code>--nobanner</code> option to the command line.
+the output. To do that, add the <a title="--nobanner switch" href="#switch-nobanner">
+<code>--nobanner</code> option</a> to the
+command line.
 In the following examples, we quote the tool's output with that option
 present, even though it is not shown.</p>
 <pre>
@@ -236,11 +355,12 @@ se at /mnt/databag using filter "all" ...
 </code>
 </pre>
 </blockquote>
-<h2 id="toc000004">
-<a name="toc000004"> </a>Synchronizing files</h2>
+<h3 id="toc000005">
+<a name="toc000005"> </a>Synchronizing files</h3>
 <p>Once the <a title="Concepts and terms: bag" href="#term-bag">bag</a> and the <a title="Concepts and terms: default replica" href="#term-default-replica">default replica</a> are set up, running
 <em>data-bag</em> without arguments in the bag's directory
-(or, with the <code>-d</code> argument, in any directory)
+(or, with the <a title="--medium switch" href="#switch-medium">
+<code>-d</code> option</a>, in any directory)
 will automatically synchronize them:</p>
 <pre>
 <code>$ java -jar /mnt/databag.jar -d /mnt/
@@ -254,8 +374,10 @@ se at /mnt/databag using filter "all" ...
 </code>
 </pre>
 </blockquote>
-<p>You can also request synchronization explicitly by entering the <code>--sync</code>
-command (or its shorthand <code>-s</code>). The following command does the same as above:</p>
+<p>You can also request synchronization explicitly by entering the
+<a title="--sync switch" href="#switch-sync">
+<code>--sync</code> command</a> (or its shorthand <code>-s</code>). The following command
+does the same as above:</p>
 <pre>
 <code>$ java -jar /mnt/databag.jar -d /mnt/ -s
 </code>
@@ -272,8 +394,8 @@ should synchronize, by appending a <a title="Concepts and terms: location patter
 <a title="Concepts and terms: replica" href="#term-replica">replica</a> (except for the files deleted in that <a title="Concepts and terms: replica" href="#term-replica">replica</a>) and unmatched
 files from the <a title="Concepts and terms: replica" href="#term-replica">replica</a> are stored in the <a title="Concepts and terms: bag" href="#term-bag">bag</a>.
 Files at the same location relative to both containers are subject to
-<a href="version-tracking">version tracking</a> and, in some cases,
-<a href="conflict-resolution">conflict resolution</a>.</p>
+<a href="#version-tracking">version tracking</a> and, in some cases,
+<a href="#conflict-resolution">conflict resolution</a>.</p>
 <p>A typical scenario of everyday <em>data-bag</em> use consists of three steps:</p>
 <ol>
 <li>Synchronize a <a title="Concepts and terms: replica" href="#term-replica">replica</a> to pick up recent changes.</li>
@@ -284,7 +406,8 @@ Files at the same location relative to both containers are subject to
 synchronized the <a title="Concepts and terms: replica" href="#term-replica">replica</a>, you may skip step 1.</p>
 <p>
 <em>Data-bag</em> logs the operations that affect the <a title="Concepts and terms: bag" href="#term-bag">bag</a>'s contents. To review
-the log entries, enter the <code>--log</code> command, followed by an optional date or
+the log entries, enter the <a title="--log switch" href="#switch-log">
+<code>--log</code> command</a>, followed by an optional date or
 two dates constraining the time frame of interest. Without arguments, the
 command will display all the log entries for your bag. With a single date
 argument, the output will cover the period starting at that date. For example,
@@ -294,8 +417,8 @@ command</p>
 </code>
 </pre>
 <p>will display the log entries made on or after January, 1st 2013.</p>
-<h2 id="toc000005">
-<a name="toc000005"> </a>Commands and options; disabling automatic sync</h2>
+<h3 id="toc000006">
+<a name="toc000006"> </a>Commands and options; disabling automatic sync</h3>
 <p>The arguments that you pass to <em>data-bag</em> on the command line always belong to
 a group that begins with a <em>switch</em>: a literal string with <code>--</code> prefix or a
 shorthand that begins with a dash. The switches, including shorthands, are
@@ -308,8 +431,17 @@ conflict with others, and some may not be compatible with the <a title="Concepts
 run. In that case you may encounter a warning or error when running <em>data-bag</em>.
 If you enter two or more commands on the command line, you will get an error,
 and none of the commands will run.</p>
-<p>For example, the <code>--log</code> and <code>--sync</code> switches shown above are commands, while
-<code>--medium</code> and <code>--local</code> are options. Thus, you can either display the log of
+<p>For example, the <a title="--log switch" href="#switch-log">
+<code>--log</code>
+</a> and <a title="--sync switch" href="#switch-sync">
+<code>--sync</code>
+</a> switches shown above
+are commands, while <a title="--medium switch" href="#switch-medium">
+<code>--medium</code>
+</a> and <a title="--local switch" href="#switch-local">
+<code>--local</code>
+</a> are
+options. Thus, you can either display the log of
 operations, or synchronize the <a title="Concepts and terms: bag" href="#term-bag">bag</a>; but in both cases you are able to tell
 <em>data-bag</em> where your shared medium is mounted.</p>
 <p>As noted above, <em>data-bag</em> runs the synchronization automatically when its
@@ -317,34 +449,39 @@ command line has <code>--medium</code> and <code>--local</code> options and noth
 the program treats <code>--sync</code> as the default <a title="Concepts and terms: command" href="#term-command">command</a> and runs it whenever no
 other commands are present. In some cases, such as when you are configuring a
 <a title="Concepts and terms: bag" href="#term-bag">bag</a>, you may want to skip the automatic synchronization. To do that, add
-the <code>--nosync</code> option (shorthand <code>-N</code>) to the command line. For example,</p>
+the <a title="--nosync switch" href="#switch-nosync">
+<code>--nosync</code> option</a> (shorthand <code>-N</code>) to the command line. For example,</p>
 <pre>
 <code>$ java -jar /mnt/databag.jar -d /mnt/ -C /tmp/demo1 -N
 </code>
 </pre>
 <p>will register <code>/tmp/demo1</code> as a new replica for the <a title="Concepts and terms: bag" href="#term-bag">bag</a>, but will not
 synchronize that directory.</p>
-<h2 id="toc000006">
-<a name="toc000006"> </a>Managing replicas</h2>
-<p>You can establish a <a title="Concepts and terms: replica" href="#term-replica">replica</a> in a directory, using the
-<code>--local</code> option or its <code>-C</code> shorthand. This is how you un-bag your files on a
+<h3 id="toc000007">
+<a name="toc000007"> </a>Managing replicas</h3>
+<p>You can establish a <a title="Concepts and terms: replica" href="#term-replica">replica</a> in a directory, using the <a title="--local switch" href="#switch-local">
+<code>--local</code> option</a>
+or its <code>-C</code> shorthand. This is how you un-bag your files on a
 new machine. If the new replica's directory does not exist, it will be created
 for you. However, its parent directory must exist for the operation to succeed.</p>
 <p>A user can have multiple replicas of the same bag on any machine. One of these
 replicas is designated as the <a title="Concepts and terms: default replica" href="#term-default-replica">default replica</a> for the user's account.
 Commands that work with a replica use the <a title="Concepts and terms: default replica" href="#term-default-replica">default replica</a> unless there is
-a <code>--local</code> option on the command line. The first replica that a user creates
+a <a title="--local switch" href="#switch-local">
+<code>--local</code> option</a> on the command line. The first replica that a user creates
 becomes the <a title="Concepts and terms: default replica" href="#term-default-replica">default replica</a> for his or her account. To make another
 <a title="Concepts and terms: replica" href="#term-replica">replica</a> the <a title="Concepts and terms: default replica" href="#term-default-replica">default replica</a> for your account, enter the <code>--default</code>
-option after <code>--local</code> and respective replica's path:</p>
+argument after <code>--local</code> and respective replica's path:</p>
 <pre>
 <code>$ java -jar /mnt/databag.jar -d /mnt/ -C /tmp/demo1 --default
 </code>
 </pre>
 <p>Note that this command will also synchronize <code>/tmp/demo1</code> unless you add the
-<code>--nosync</code> option.</p>
+<a title="--nosync switch" href="#switch-nosync">
+<code>--nosync</code> option</a>.</p>
 <p>To find out locations of replicas defined for the current user's account, use
-the <code>--list</code> command (or the shorthand <code>-l</code>) followed by the <code>replicas</code> keyword:</p>
+the <a title="--list switch" href="#switch-list">
+<code>--list</code> command</a> (or the shorthand <code>-l</code>) followed by the <code>replicas</code> keyword:</p>
 <pre>
 <code>$ java -jar /mnt/databag.jar -d /mnt/ -l replicas
 </code>
@@ -371,8 +508,8 @@ past operations with that replica will be lost.</strong>
 <p>
 <a name="filtering-files"> </a>
 </p>
-<h2 id="toc000007">
-<a name="toc000007"> </a>Filtering files</h2>
+<h3 id="toc000008">
+<a name="toc000008"> </a>Filtering files</h3>
 <p>There are many practical reasons to avoid tracking and synchronizing certain
 files, or to synchronize them on different schedules. Some files may be too
 large to fit on the shared medium. Others are generated automatically and can
@@ -426,7 +563,8 @@ the built-in filter <code>all</code>.
 </tr>
 </table>
 <p>The easiest way to define a <a title="Concepts and terms: filter" href="#term-filter">filter</a> and store it in a <a title="Concepts and terms: bag" href="#term-bag">bag</a> is to use the
-<code>--set</code> option and place all the filter's <a title="Concepts and terms: location pattern" href="#term-pattern">patterns</a> on the command line:</p>
+<a title="--set switch" href="#switch-set">
+<code>--set</code> option</a> and place all the filter's <a title="Concepts and terms: location pattern" href="#term-pattern">patterns</a> on the command line:</p>
 <pre>
 <code>$ java -jar /mnt/databag.jar -d /mnt -F 'Documents and spreadsheets' \
 --set '*.odt:*.ods:*.doc:*.xls' 'Welcome*'
@@ -441,7 +579,8 @@ system. <a title="Mostly POSIX-compliant systems" href="http://en.wikipedia.org/
 no affect any <a title="Concepts and terms: replica" href="#term-replica">replicas</a> (i.e. work with files in a <a title="Concepts and terms: bag" href="#term-bag">bag</a> only) perform
 case-sensitive pattern matching.</p>
 <p>The above command will also synchronize the default replica unless you add the
-<code>--nosync</code> option:</p>
+<a title="--nosync switch" href="#switch-nosync">
+<code>--nosync</code> option</a>:</p>
 <blockquote>
 <pre>
 <code>Jan 25, 2013 12:24:08 AM name.livitski.databag.cli.Launcher setFilter
@@ -452,17 +591,20 @@ se at /mnt/databag using filter "documents and spreadsheets" ...
 </code>
 </pre>
 </blockquote>
-<p>Note that the filter name follows the <code>--filter</code> option, or its shorthand <code>-F</code>.
-Use that option to select a <a title="Concepts and terms: filter" href="#term-filter">filter</a> to manipulate, display, or apply to an
-operation.</p>
-<p>The <code>--set</code> option expects two arguments: a list of <em>include</em> <a title="Concepts and terms: location pattern" href="#term-pattern">patterns</a>, and
-a list of <em>exclude</em> <a title="Concepts and terms: location pattern" href="#term-pattern">patterns</a>. The patterns on each list are separated by
-the system-specific path separator string. On <a title="Mostly POSIX-compliant systems" href="http://en.wikipedia.org/wiki/POSIX#Mostly_POSIX-compliant">POSIX</a>-compliant systems, that
-string consists of a colon character, <code>:</code>. When a pattern on a list contains
-white space, you have to escape it to make sure the entire list is interpreted
+<p>Note that the filter name follows the <a title="--filter switch" href="#switch-filter">
+<code>--filter</code> option</a>, or its
+shorthand <code>-F</code>. Use that option to select a <a title="Concepts and terms: filter" href="#term-filter">filter</a> to manipulate, display,
+or apply to an operation.</p>
+<p>The <a title="--set switch" href="#switch-set">
+<code>--set</code> option</a> expects two arguments: a list of <em>include</em>
+<a title="Concepts and terms: location pattern" href="#term-pattern">patterns</a>, and a list of <em>exclude</em> <a title="Concepts and terms: location pattern" href="#term-pattern">patterns</a>. The patterns on each list
+are separated by the system-specific path separator string. On
+<a title="Mostly POSIX-compliant systems" href="http://en.wikipedia.org/wiki/POSIX#Mostly_POSIX-compliant">POSIX</a>-compliant systems, that string consists of a colon character, <code>:</code>.
+When a pattern on a list contains white space,
+you have to escape it to make sure the entire list is interpreted
 by the shell as a single argument. You may also have to escape the <code>?</code> and <code>*</code>
 characters within patterns to prevent their expansion by the shell. To make
-one of the lists empty, you can follow the <code>--set</code> option with an empty-string
+one of the lists empty, you can follow up the <code>--set</code> option with an empty-string
 argument, if your shell allows that, or use a single path separator string
 otherwise. For example, command line</p>
 <pre>
@@ -472,8 +614,9 @@ otherwise. For example, command line</p>
 <p>will create a filter that excludes all files with suffix <code>.tmp</code> anywhere in the
 <a title="Concepts and terms: bag" href="#term-bag">bag</a>'s or <a title="Concepts and terms: replica" href="#term-replica">replica</a>'s hierarchy.</p>
 <p>To apply a named filter to an operation that supports filters, use the
-<code>--filter</code> option, or its shorthand <code>-F</code>. You can append the <code>--invert</code> literal
-as the second argument to <code>--filter</code> to make the <a title="Concepts and terms: filter" href="#term-filter">filter</a> work in reverse,
+<a title="--filter switch" href="#switch-filter">
+<code>--filter</code> option</a>, or its shorthand <code>-F</code>. You can append the <code>--invert</code>
+literal as the second argument to <code>--filter</code> to make the <a title="Concepts and terms: filter" href="#term-filter">filter</a> work in reverse,
 rejecting files that match it and accepting files that don't. For example,
 having defined the prevoius filter, you can list all files with suffix <code>.tmp</code>
 that are already in the <a title="Concepts and terms: bag" href="#term-bag">bag</a> by entering the command:</p>
@@ -481,7 +624,8 @@ that are already in the <a title="Concepts and terms: bag" href="#term-bag">bag<
 <code>$ java -jar /mnt/databag.jar -d /mnt -F 'No temp files' --invert -l
 </code>
 </pre>
-<p>To list filters in the <a title="Concepts and terms: bag" href="#term-bag">bag</a>, use the <code>--list</code> command (or its shorthand
+<p>To list filters in the <a title="Concepts and terms: bag" href="#term-bag">bag</a>, use the <a title="--list switch" href="#switch-list">
+<code>--list</code> command</a> (or its shorthand
 <code>-l</code>) with the <code>filters</code> keyword:</p>
 <pre>
 <code>$ java -jar /mnt/databag.jar -d /mnt -l filters
@@ -500,14 +644,16 @@ that are already in the <a title="Concepts and terms: bag" href="#term-bag">bag<
 current replica. Since our <a title="Concepts and terms: default replica" href="#term-default-replica">default replica</a> does not have a default filter,
 and no filter named <code>default</code> exists in the <a title="Concepts and terms: bag" href="#term-bag">bag</a>, this replica will have the
 built-in filter <code>all</code> applied to it. To change the default filter for a
-replica, append the <code>--default</code> literal to the <code>--filter</code> option:</p>
+replica, append the <code>--default</code> literal to the <a title="--filter switch" href="#switch-filter">
+<code>--filter</code> option</a>:</p>
 <pre>
 <code>$ java -jar /mnt/databag.jar -d /mnt -F 'No temp files' --default -N
 </code>
 </pre>
-<p>Note that you may want to use the <code>--local</code> option as well unless you are
-configuring the <a title="Concepts and terms: default replica" href="#term-default-replica">default replica</a>. Now, the <code>--list</code> command line shown above
-will result in this output:</p>
+<p>Note that you may want to use the <a title="--local switch" href="#switch-local">
+<code>--local</code> option</a> as well unless you
+are configuring the <a title="Concepts and terms: default replica" href="#term-default-replica">default replica</a>. Now, the <code>--list</code> command line shown
+above will result in this output:</p>
 <blockquote>
 <pre>
 <code>  all                                                                          
@@ -525,10 +671,11 @@ will result in this output:</p>
 <p>
 <em>TODO: explain how to load a filter (note that --load is an option)</em>
 </p>
-<h2 id="toc000008">
-<a name="toc000008"> </a>Listing the bag's contents</h2>
-<p>You can list paths to all files in the <a title="Concepts and terms: bag" href="#term-bag">bag</a> using the <code>--list</code> command (or
-its shorthand <code>-l</code>) followed by the <code>files</code> keyword, or without the keyword:</p>
+<h3 id="toc000009">
+<a name="toc000009"> </a>Listing the bag's contents</h3>
+<p>You can list paths to all files in the <a title="Concepts and terms: bag" href="#term-bag">bag</a> using the <a title="--list switch" href="#switch-list">
+<code>--list</code> command</a>
+(or its shorthand <code>-l</code>) followed by the <code>files</code> keyword, or without the keyword:</p>
 <pre>
 <code>$ java -jar /mnt/databag.jar -d /mnt -l
 </code>
@@ -549,11 +696,13 @@ Trigonometric_functions.xls
 matching the current <a title="Concepts and terms: filter" href="#term-filter">filter</a>. <em>Data-bag</em> sends the diagnostic output (two
 lines at the top) is sent to the standard error stream. You can separate it
 from the list output by redirecting either or both output streams.</p>
-<p>With the <code>--list</code> command you can display other data records stored in a
+<p>With the <a title="--list switch" href="#switch-list">
+<code>--list</code> command</a> you can display other data records stored in a
 <a title="Concepts and terms: bag" href="#term-bag">bag</a>, such as <a title="Concepts and terms: replica" href="#term-replica">replicas</a>, <a title="Concepts and terms: filter" href="#term-filter">filters</a>, and view detailed
 information about a <a title="Concepts and terms: filter" href="#term-filter">filter</a>. That is done by placing a keyword, such as
 <code>replicas</code>, <code>filters</code>, or <code>filter</code>, after the command. A keyword that follows
-the <code>--list</code> command can be typed using letters in any (or both) cases.<br/>
+the <a title="--list switch" href="#switch-list">
+<code>--list</code> command</a> can be typed using letters in any (or both) cases.<br/>
 </p>
 <p>
 <em>TODO: example of the --save option with a list command</em>
@@ -561,8 +710,8 @@ the <code>--list</code> command can be typed using letters in any (or both) case
 <p>
 <a name="version-tracking"> </a>
 </p>
-<h2 id="toc000009">
-<a name="toc000009"> </a>Tracking versions of stored files</h2>
+<h3 id="toc000010">
+<a name="toc000010"> </a>Tracking versions of stored files</h3>
 <p>When <em>data-bag</em> synchronizes a <a title="Concepts and terms: replica" href="#term-replica">replica</a>, it detects changes made to the
 local files. A changed local file is matched against the file at the same
 location in the <a title="Concepts and terms: bag" href="#term-bag">bag</a> as explained <a href="#conflict-resolution">below</a>. If there
@@ -581,9 +730,10 @@ only then synchronize it, the <a title="Concepts and terms: history" href="#term
 contain a record of the document as it looked during your lunch time. To have
 changes to your files recorded separately from later changes, synchronize the
 files that you are editing often.</p>
-<p>To review the history of a shared file, run the <code>--history</code> command (shorthand
-<code>-h</code>) followed by that file's path relative to the replica's root directory.
-For example,</p>
+<p>To review the history of a shared file, run the <a title="--history switch" href="#switch-history">
+<code>--history</code> command</a>
+(shorthand <code>-h</code>) followed by that file's path relative to the replica's root
+directory. For example,</p>
 <pre>
 <code>$ java -jar /mnt/databag.jar -d /mnt -h 'About_these_files.odt'
 </code>
@@ -614,8 +764,8 @@ numbers are unique within the file's history.</p>
 <p>
 <a name="conflict-resolution"> </a>
 </p>
-<h2 id="toc000010">
-<a name="toc000010"> </a>Resolving conflicts among replicas</h2>
+<h3 id="toc000011">
+<a name="toc000011"> </a>Resolving conflicts among replicas</h3>
 <p>During synchronization, if there is a file at the same location relative to
 the <a title="Concepts and terms: bag" href="#term-bag">bag</a> and the <a title="Concepts and terms: replica" href="#term-replica">replica</a>, the local file's attributes are compared to
 those of the prior <a title="Concepts and terms: version" href="#term-version">versions</a> of the bagged file. If there is a match, the
@@ -640,8 +790,9 @@ file has a synchronization record of file #1 in replica #2 to version #1
 </pre>
 </blockquote>
 <p>To proceed with synchronization, you must tell <em>data-bag</em> how to resolve the
-conflict. Add the <code>--default-action</code> option (or its shorthand <code>-A</code>) followed by
-one of the keywords from the table below:</p>
+conflict. Add the <a title="--default-action switch" href="#switch-default-action">
+<code>--default-action</code> option</a> (or its shorthand <code>-A</code>)
+followed by one of the keywords from the table below:</p>
 <table cellpadding="4" border="1" cellspacing="0">
 <tr>
 <th>Keyword</th>
@@ -686,8 +837,8 @@ patterns to address that</em>
 <p>
 <a name="deleted-files"> </a>
 </p>
-<h2 id="toc000011">
-<a name="toc000011"> </a>Deleted files</h2>
+<h3 id="toc000012">
+<a name="toc000012"> </a>Deleted files</h3>
 <p>
 <em>Data-bag</em> detects files that have been deleted from the replica after it was
 last synchronized. During the next synchronization of that replica, those files
@@ -698,7 +849,8 @@ its files even after they are marked deleted to allow you to
 a <a title="Concepts and terms: replica" href="#term-replica">replica</a> at the same location as the previously deleted file. The new file
 will have a separate <a title="Concepts and terms: history" href="#term-history">history</a> if you synchronize the <a title="Concepts and terms: replica" href="#term-replica">replica</a> that you
 create it in after the old file's deletion and before the new file's creation.</p>
-<p>The <code>--history</code> command with a location argument lists versions of the existing
+<p>The <a title="--history switch" href="#switch-history">
+<code>--history</code> command</a> with a location argument lists versions of the existing
 file and histories of all deleted files at the same relative location. For
 example,</p>
 <p>
@@ -720,8 +872,8 @@ intervention.</p>
 <p>
 <a name="restoring-files"> </a>
 </p>
-<h2 id="toc000012">
-<a name="toc000012"> </a>Restoring old versions and deleted files</h2>
+<h3 id="toc000013">
+<a name="toc000013"> </a>Restoring old versions and deleted files</h3>
 <p>
 <em>Data-bag</em> allows you to restore older <a title="Concepts and terms: version" href="#term-version">versions</a> of existing files
 and the files you deleted after a synchronization. There are two different
@@ -729,21 +881,24 @@ and the files you deleted after a synchronization. There are two different
 <p>The first method is useful when you need to obtain historic files for a
 temporary use. For example, you may want to check how a certain document looked
 a week ago, make a copy of it, or compare it with the current <a title="Concepts and terms: version" href="#term-version">version</a>. To
-obtain such temporary images of historic files, use the <code>--restore</code> command
-described in this chapter.</p>
+obtain such temporary images of historic files, use the
+<a title="--restore switch" href="#switch-restore">
+<code>--restore</code> command</a> described in this chapter.</p>
 <p>The other method is needed when you decide to discard unwanted changes to your
 files after you have synchronized them with a <a title="Concepts and terms: bag" href="#term-bag">bag</a>. For example, you might
 have made a computation in a spreadsheet, saved and synchronized it. A week
 later you may realize that the formulas that you used were incorrect, and
 decide to start from scratch. To roll back changes that are already stored in
-a <a title="Concepts and terms: bag" href="#term-bag">bag</a> you may want to run the <code>--undo</code> command, described
+a <a title="Concepts and terms: bag" href="#term-bag">bag</a> you may want to run the <a title="--undo switch" href="#switch-undo">
+<code>--undo</code> command</a>, described
 <a href="#undoing-changes">later</a>.</p>
 <p>Restoration of historic files for a temporary use requires knowledge of two
 things: original locations and version numbers of the files being restored.
 For simplicity, consider a single file restoration first. If you want to see
 how the file <code>About_these_files.odt</code> looked before it was modified, and you
 <a href="#version-tracking">know</a> that there are two <a title="Concepts and terms: version" href="#term-version">versions</a> of that file
-in the <a title="Concepts and terms: bag" href="#term-bag">bag</a>, you can run <code>--restore</code> command (or its shorthand <code>-r</code>) as
+in the <a title="Concepts and terms: bag" href="#term-bag">bag</a>, you can run <a title="--restore switch" href="#switch-restore">
+<code>--restore</code> command</a> (or its shorthand <code>-r</code>) as
 follows:</p>
 <pre>
 <code>$ java -jar /mnt/databag.jar -d /mnt -r 'About_these_files.odt' --vn 1
@@ -762,10 +917,12 @@ INFO: Restoring version 1 (file=1, base=0, size=181512, modified=2010-03-26 08:2
 </code>
 </pre>
 </blockquote>
-<p>The file's relative location follows the <code>-r</code> command on the command line. The
-<code>--vn</code> option specifies the <a title="Concepts and terms: version number" href="#term-version-number">version number</a> to be restored. Observe
-that the historic <a title="Concepts and terms: version" href="#term-version">version</a> is written to its <a title="Concepts and terms: replica" href="#term-replica">replica</a> location, replacing
-the current file.</p>
+<p>The file's relative location follows the <a title="--restore switch" href="#switch-restore">
+<code>-r</code> command</a> on the
+command line. The <a title="--vn switch" href="#switch-vn">
+<code>--vn</code> option</a> specifies the <a title="Concepts and terms: version number" href="#term-version-number">version number</a> to be
+restored. Observe that the historic <a title="Concepts and terms: version" href="#term-version">version</a> is written to its <a title="Concepts and terms: replica" href="#term-replica">replica</a>
+location, replacing the current file.</p>
 <pre>
 <code>$ ls -l /tmp/demo/About_these_files.odt
 </code>
@@ -778,25 +935,29 @@ the current file.</p>
 </blockquote>
 <p>
 <em>Data-bag</em> will synchronize the file with the <a title="Concepts and terms: bag" href="#term-bag">bag</a> before overwriting it, so
-that file can be retrieved later. Since <code>--restore</code> command performs temporary
-restore, the file's old <a title="Concepts and terms: version" href="#term-version">version</a> will be replaced again with the current one
-next time you synchronize the <a title="Concepts and terms: replica" href="#term-replica">replica</a>.</p>
+that file can be retrieved later. Since <a title="--restore switch" href="#switch-restore">
+<code>--restore</code> command</a> performs
+temporary restore, the file's old <a title="Concepts and terms: version" href="#term-version">version</a> will be replaced again with the
+current one next time you synchronize the <a title="Concepts and terms: replica" href="#term-replica">replica</a>.</p>
 <p>If you want to compare the
 current version of the file with the original version, or otherwise avoid
 confusion between current and historic files, you may tell <em>data-bag</em> to
-restore that file elsewhere. To achieve that, add a <code>--save</code> option (or its
-shorthand <code>-o</code>) to the command line:</p>
+restore that file elsewhere. To achieve that, add a <a title="--save switch" href="#switch-save">
+<code>--save</code> option</a>
+(or its shorthand <code>-o</code>) to the command line:</p>
 <pre>
 <code>$ java -jar /mnt/databag.jar -d /mnt -r 'About_these_files.odt' --vn 1 \
 -o /tmp/about.odt
 </code>
 </pre>
-<p>The argument of the <code>--save</code> option is either an absolute location of the
+<p>The argument of the <a title="--save switch" href="#switch-save">
+<code>--save</code> option</a> is either an absolute location of the
 restored file or a location relative to the current directory. If you restore
 a single file into a different location in the current <a title="Concepts and terms: replica" href="#term-replica">replica</a>, <em>data-bag</em>
 will add it to the <a title="Concepts and terms: bag" href="#term-bag">bag</a> right away, without the need for synchronization.
 However, <em>data-bag</em> will not overwrite any existing files when restoring with
-the <code>--save</code> option.</p>
+the <a title="--save switch" href="#switch-save">
+<code>--save</code> option</a>.</p>
 <p>When the above command is run without a <a title="Concepts and terms: version number" href="#term-version-number">version number</a>, <em>data-bag</em> restores
 the most recent version of the file, i.e.</p>
 <pre>
@@ -816,8 +977,12 @@ the most recent version of the file, i.e.</p>
 </pre>
 </blockquote>
 <p>You can also restore the most recent version of a file as of a specific moment
-in the past, by adding <code>--as-of</code> option (or its shortcut <code>-a</code>). Note that
-<code>--as-of</code> option cannot be used with <code>--vn</code>.</p>
+in the past, by adding <a title="--as-of switch" href="#switch-as-of">
+<code>--as-of</code> option</a> (or its shorthand <code>-a</code>). Note that
+<a title="--as-of switch" href="#switch-as-of">
+<code>--as-of</code> option</a> cannot be used with <a title="--vn switch" href="#switch-vn">
+<code>--vn</code>
+</a>.</p>
 <pre>
 <code>$ java -jar /mnt/databag.jar -d /mnt -r 'About_these_files.odt' \
 -a 2012-12-31 22:12:12
@@ -834,7 +999,8 @@ day) as the target time.</p>
 </p>
 <p>When you don't have a fixed <a title="Concepts and terms: version number" href="#term-version-number">version number</a> to restore, you can restore
 multiple files with relative locations matching a <a title="Concepts and terms: location pattern" href="#term-pattern">pattern</a>. You can use the
-<code>--save</code> option with such command if the argument points to an empty directory
+<a title="--save switch" href="#switch-save">
+<code>--save</code> option</a> with such command if the argument points to an empty directory
 that is neither the current <a title="Concepts and terms: replica" href="#term-replica">replica</a>'s root nor any of its descendants. For
 example, commands</p>
 <pre>
@@ -851,8 +1017,8 @@ current replica, e.g. by following a symbolic link, the operation will fail.</p>
 <p>
 <a name="undoing-changes"> </a>
 </p>
-<h2 id="toc000013">
-<a name="toc000013"> </a>Rolling back changes to files</h2>
+<h3 id="toc000014">
+<a name="toc000014"> </a>Rolling back changes to files</h3>
 <p>
 <em>TODO: describe the undo operation</em>
 </p>
@@ -860,15 +1026,16 @@ current replica, e.g. by following a symbolic link, the operation will fail.</p>
 <em>TODO: explain how undo deletes and un-deletes files</em>
 </p>
 <p>
-<a name="purge-command"> </a>
+<a name="purging-bags"> </a>
 </p>
-<h2 id="toc000014">
-<a name="toc000014"> </a>Purging old versions from shared storage</h2>
+<h3 id="toc000015">
+<a name="toc000015"> </a>Purging old versions from a bag</h3>
 <p>When <em>data-bag</em> updates a <a title="Concepts and terms: bag" href="#term-bag">bag</a>, it retains all deleted files and historical
 <a title="Concepts and terms: version" href="#term-version">versions</a> of existing files. Thus, <a title="Concepts and terms: bag" href="#term-bag">bags</a> tend to grow in size
 during each synchronization. To avoid running out of space on the shared
 medium, you may occasionally want to purge old versions and deleted files.
-To do that, use the <code>--purge</code> command followed by a date in <code>yyyy-mm-dd</code>
+To do that, use the <a title="--purge switch" href="#switch-purge">
+<code>--purge</code> command</a> followed by a date in <code>yyyy-mm-dd</code>
 format:</p>
 <pre>
 <code>$ java -jar /mnt/databag.jar -d /mnt --purge 2012-01-01
@@ -894,8 +1061,11 @@ haven't been modified since the epoch began, and, in some cases, version
 records needed to restore other versions modified during the current <a title="Concepts and terms: epoch" href="#term-epoch">epoch</a>.
 <strong>The purge operation is irreversible, so use it with caution.</strong>
 </p>
-<h2 id="toc000015">
-<a name="toc000015"> </a>Encrypting your bag</h2>
+<p>
+<a name="encrypting-bags"> </a>
+</p>
+<h3 id="toc000016">
+<a name="toc000016"> </a>Encrypting your bag</h3>
 <p>To help you prevent unauthorized access to <a title="Concepts and terms: bag" href="#term-bag">bags</a>, <em>data-bag</em> supports
 encryption of data on the shared medium. <em>Data-bag</em> uses symmetric cryptography
 to encrypt <a title="Concepts and terms: bag" href="#term-bag">bags</a> and, currently, applies a single key to each <a title="Concepts and terms: bag" href="#term-bag">bag</a> in
@@ -904,13 +1074,16 @@ encryption and store them securely.</p>
 <p>The <em>data-bag</em>'s interface allows you to set up encryption and estblish a key
 when you create a <a title="Concepts and terms: bag" href="#term-bag">bag</a>. Then, you have to feed the same key to the software
 every time you run an operation on the encrypted <a title="Concepts and terms: bag" href="#term-bag">bag</a>. In both cases, you
-need to add the <code>--encrypt</code> option (or the shorthand <code>-E</code>) to the command line.</p>
-<p>The arguments to the <code>--encrypt</code> option differ depending on how you provide the
+need to add the <a title="--encrypt switch" href="#switch-encrypt">
+<code>--encrypt</code> option</a> (or the shorthand <code>-E</code>) to the command line.</p>
+<p>The arguments to the <a title="--encrypt switch" href="#switch-encrypt">
+<code>--encrypt</code> option</a> differ depending on how you provide the
 key to <em>data-bag</em>:</p>
 <ul>
 <li>
 <p>To submit the key via standard input, enter the <code>stdin</code> keyword following
-the <code>--encrypt</code> option. Note that your terminal will echo the key unless you
+the <a title="--encrypt switch" href="#switch-encrypt">
+<code>--encrypt</code> option</a>. Note that your terminal will echo the key unless you
 redirect the standard input.</p>
 <pre>
 <code>$ java -jar /mnt/databag.jar -d /mnt --create -E stdin
@@ -925,7 +1098,8 @@ input or output redirection.</p>
 <li>
 <p>To enter the key on the command line, or use a shell variable, append the
 <code>key</code> keyword and the key argument or variable to the command line after the
-<code>--encrypt</code> option. This is the only method that allows you to add line
+<a title="--encrypt switch" href="#switch-encrypt">
+<code>--encrypt</code> option</a>. This is the only method that allows you to add line
 separator characters to your key.</p>
 <pre>
 <code>$ java -jar /mnt/databag.jar -d /mnt -l -E key "$BAG_KEY"
@@ -933,8 +1107,10 @@ separator characters to your key.</p>
 </pre>
 </li>
 </ul>
-<p>The <code>--encrypt</code> option is insensitive to the letter case of its keywords.
-Given the <code>--encrypt</code> option without arguments, <em>data-bag</em> defaults to asking
+<p>The <a title="--encrypt switch" href="#switch-encrypt">
+<code>--encrypt</code> option</a> is insensitive to the letter case of its keywords.
+Given the <a title="--encrypt switch" href="#switch-encrypt">
+<code>--encrypt</code> option</a> without arguments, <em>data-bag</em> defaults to asking
 user to enter the key via terminal (as in the <code>ask</code> mode) in the environments
 supporting that. Where the terminal input is not supported, the software issues
 a warning message and falls back to the standard input method.</p>
@@ -946,7 +1122,8 @@ punctuation marks.</p>
 <p>
 <em>Data-bag</em> currently supports two encryption algorithms: <em>AES</em> and <em>XTEA</em>. The
 default encryption algorithm for <a title="Concepts and terms: bag" href="#term-bag">bags</a> is <em>AES</em>. To use the alternative
-algorithm, append keywords <code>--cipher xtea</code> to the <code>--encrypt</code> option:</p>
+algorithm, append keywords <code>--cipher xtea</code> to the <a title="--encrypt switch" href="#switch-encrypt">
+<code>--encrypt</code> option</a>:</p>
 <pre>
 <code>$ java -jar /mnt/databag.jar -d /mnt/teabag --create -E ask --cipher xtea
 </code>
@@ -960,7 +1137,9 @@ directly:</p>
 -dir /mnt/teabag/databag/ -db databag -decrypt "password" -cipher XTEA 
 </code>
 </pre>
-<p>For details about the encryption management tool embedded in <em>data-bag</em>, please
+<p>
+<a name="change-encryption"> </a>
+For details about the encryption management tool embedded in <em>data-bag</em>, please
 refer to the the <code>ChangeFileEncryption</code> command reference in the
 <a href="http://h2database.com">H2 database</a> documentation, available online at
 <a href="http://h2database.com/html/features.html#file_encryption">http://h2database.com/html/features.html#file_encryption</a>. You can obtain the
@@ -972,8 +1151,504 @@ tool's usage summary by running it without arguments:</p>
 <p>The directory argument to the <code>ChangeFileEncryption</code> tool must point to the
 <code>databag</code> directory of the medium with your <a title="Concepts and terms: bag" href="#term-bag">bag</a>. The database argument
 must be <code>databag</code>, too.</p>
-<h2 id="toc000016">
-<a name="toc000016"> </a>Concepts and terms used in this manual</h2>
+<h2 id="toc000017">
+<a name="toc000017"> </a>
+<em>Data-bag</em> command line reference</h2>
+<p>
+<a name="commands-reference"> </a>
+</p>
+<h3 id="toc000018">
+<a name="toc000018"> </a>Commands</h3>
+<h4 id="switch-help">
+<a name="switch-help"> </a>-?, --help</h4>
+<a name="switch-help"> </a>
+<p>
+<strong>Syntax:</strong> <code>--help</code>
+</p>
+<p>Prints the command line syntax summary and exits.</p>
+<h4 id="switch-drop">
+<a name="switch-drop"> </a>--drop</h4>
+<a name="switch-drop"> </a>
+<p>
+<strong>Syntax:</strong> <code>--drop</code> <em>type</em> [ <code>--force</code> ]</p>
+<p>Removes a record from the <a title="Concepts and terms: bag" href="#term-bag">bag</a>. The <em>type</em>
+argument communicates the type of a record to be removed.
+Supported types are <code>REPLICA</code> and <code>FILTER</code>. <code>REPLICA</code> type must be
+used in conjunction with the <a title="--local switch" href="#switch-local">
+<code>--local</code> option</a> to select the
+<a title="Concepts and terms: replica" href="#term-replica">replica</a> to drop. <code>FILTER</code> type requires a <a title="--filter switch" href="#switch-filter">
+<code>--filter</code> option</a>
+that tells <em>data-bag</em> what <a title="Concepts and terms: filter" href="#term-filter">filter</a> to drop. Built-in filter <code>all</code>
+cannot be dropped. If there are replicas that use the filter
+being dropped as their default filter, the command will fail
+unless followed by the <code>--force</code> switch.</p>
+<h4 id="switch-history">
+<a name="switch-history"> </a>-h, --history</h4>
+<a name="switch-history"> </a>
+<p>
+<strong>Syntax:</strong> <code>--history</code> [ <em>location</em> ]</p>
+<p>Lists all <a title="Concepts and terms: version" href="#term-version">versions</a> of a file. The argument is a relative location
+of the file in the <a title="Concepts and terms: bag" href="#term-bag">bag</a>. The location must be exact, which means it
+cannot contain <a title="Concepts and terms: location pattern" href="#term-pattern">wildcard characters</a>. When a location is specified,
+<em>data-bag</em> applies the current <a title="Concepts and terms: filter" href="#term-filter">filter</a> to it. If the location does
+not satisfy the <a title="Concepts and terms: filter" href="#term-filter">filter</a>, no <a title="Concepts and terms: history" href="#term-history">histories</a> are displayed. If there were
+deleted files with the same name, their <a title="Concepts and terms: history" href="#term-history">histories</a> are listed too.
+If you omit the <em>file</em> argument, you must enter a <a title="Concepts and terms: file number" href="#term-file-number">file number</a> on the
+command line using the <a title="--fn switch" href="#switch-fn">
+<code>--fn</code> option</a>.</p>
+<h4 id="switch-list">
+<a name="switch-list"> </a>-l, --list</h4>
+<a name="switch-list"> </a>
+<p>
+<strong>Syntax:</strong> <code>--list</code> [ <em>type</em> ]</p>
+<p>Lists items in the <a title="Concepts and terms: bag" href="#term-bag">bag</a>. The case-insensitive
+argument designates the type of items that will be listed.
+It can take values <code>FILES</code>, <code>REPLICAS</code>, <code>FILTER</code>, or <code>FILTERS</code>. The
+default is <code>FILES</code>. The output will contain a <a title="--nosync switch" href="#switch-nosync">header</a> and
+may be formatted to accommodate a standard terminal. If you redirect
+the output to a file with the <a title="--save switch" href="#switch-save">
+<code>--save</code> option</a>, it will
+contain neither the header nor the terminal formatting. With the
+<code>FILTER</code> argument, the output file is formatted to allow loading
+it into a <a title="Concepts and terms: filter" href="#term-filter">filter</a> with the <a title="--load switch" href="#switch-load">
+<code>--load</code> option</a>.<br/>
+</p>
+<h4 id="switch-log">
+<a name="switch-log"> </a>--log</h4>
+<a name="switch-log"> </a>
+<p>
+<strong>Syntax:</strong> <code>--log</code> [ <em>time-frame</em> ]</p>
+<p>Displays the log of operations that might have changed
+contents of the <a title="Concepts and terms: bag" href="#term-bag">bag</a>. Optional <em>time-frame</em> arguments
+formatted as <code>yyyy-mm-dd[ hh:mm:ss[.f...]]</code> specify the
+beginning (inclusive) and the end (exclusive) of the log
+fragment to print. If only one argument is present, it is
+treated as the beginning of the time frame and infinity is
+assumed to be the end. Note that the white space between the
+date and time parts of each argument must be included in the
+argument. You may have to escape or quote that white space
+when running <em>data-bag</em> in a shell. If you omit the time part
+of an argument, <em>data-bag</em> will assume 00:00:00.0 local time
+on the date you enter. Note that <a title="--purge switch" href="#switch-purge">
+<code>--purge</code>
+</a> erases the log
+entries beyond the <a title="Concepts and terms: epoch" href="#term-epoch">epoch</a>.</p>
+<h4 id="switch-purge">
+<a name="switch-purge"> </a>--purge</h4>
+<a name="switch-purge"> </a>
+<p>
+<strong>Syntax:</strong> <code>--purge</code> [ <em>epoch</em> ]</p>
+<p>
+<a href="#purging-bags">Purges</a> the <a title="Concepts and terms: version" href="#term-version">versions</a> of files in the <a title="Concepts and terms: bag" href="#term-bag">bag</a>
+modified before the beginning of an <a title="Concepts and terms: epoch" href="#term-epoch">epoch</a>. The <em>epoch</em> argument
+has the <code>yyyy-mm-dd</code> format followed by an optional <code>hh:mm:ss[.f...]</code>
+part. The optional part is a separate argument on the command line. In
+other words, you must not escape the white space between the parts of
+the epoch argument. This command also purges the log of operations with
+the bag prior to the new <a title="Concepts and terms: epoch" href="#term-epoch">epoch</a>.</p>
+<h4 id="switch-restore">
+<a name="switch-restore"> </a>-r, --restore</h4>
+<a name="switch-restore"> </a>
+<p>
+<strong>Syntax:</strong> <code>--restore</code> [ <em>file-or-pattern</em> ]</p>
+<p>Restores file(s) from the <a title="Concepts and terms: bag" href="#term-bag">bag</a>. The argument
+following this command must either be the relative location
+of a file in a bag, or a relative <a title="Concepts and terms: location pattern" href="#term-pattern">location pattern</a>.
+Single-file lookup by name will only succeed if there was
+just one file having that name, i.e. there were no <a title="Concepts and terms: history" href="#term-history">histories</a>
+of deleted or renamed files with the same name in the
+bag. Alternatively, you can specify a file number
+using the <a title="--fn switch" href="#switch-fn">
+<code>--fn</code> option</a>. To restore a historic version of a
+file, enter the <a title="--vn switch" href="#switch-vn">
+<code>--vn</code> option</a> with a <a title="Concepts and terms: version number" href="#term-version-number">version number</a> or the
+<a title="--as-of switch" href="#switch-as-of">
+<code>--as-of</code> option</a> with a date. To restore the file to a
+different location or under a different name than its
+current <a title="Concepts and terms: replica" href="#term-replica">replica</a>, use the <a title="--save switch" href="#switch-save">
+<code>--save</code> option</a> to enter the
+intended destination. If the destination is a descendant of the
+current replica directory, the restored file will be
+automatically added to the bag. When restoring
+multiple files, the argument to <a title="--save switch" href="#switch-save">
+<code>--save</code> option</a> should point
+to an empty directory that is neither the current replica's
+directory nor any of its descendants. Multiple-file restore
+to a target directory will fail if any of the restored files
+have to be written to a location within the current replica.
+If you don't enter a target directory on the command line,
+files that match the <a title="Concepts and terms: location pattern" href="#term-pattern">pattern</a> and the current <a title="Concepts and terms: filter" href="#term-filter">filter</a> are
+restored to their locations in the current <a title="Concepts and terms: replica" href="#term-replica">replica</a>. The
+replica may become ouf-of-sync with bag if
+restored versions are not the current ones. When restoring
+files matching a pattern, you cannot enter <a title="--fn switch" href="#switch-fn">
+<code>--fn</code>
+</a> or
+<a title="--vn switch" href="#switch-vn">
+<code>--vn</code>
+</a> options. To obtain historic versions of files, use the
+<a title="--as-of switch" href="#switch-as-of">
+<code>--as-of</code> option</a> with a date of interest. Without that option,
+the files will be restored to their current versions.</p>
+<h4 id="switch-sync">
+<a name="switch-sync"> </a>-s, --sync</h4>
+<a name="switch-sync"> </a>
+<p>
+<strong>Syntax:</strong> <code>--sync</code> [ <em>location-pattern</em> ]</p>
+<p>Synchronizes file(s) in the <a title="Concepts and terms: bag" href="#term-bag">bag</a> with the current
+<a title="Concepts and terms: replica" href="#term-replica">replica</a>. This command runs by default if you have selected
+the bag with <a title="--medium switch" href="#switch-medium">
+<code>--medium</code>
+</a>, informed <em>data-bag</em> about the
+current replica, either using <a title="--local switch" href="#switch-local">
+<code>--local</code>
+</a> or by designating the
+<a title="Concepts and terms: default replica" href="#term-default-replica">default replica</a>, and did not enter any other <a title="Concepts and terms: command" href="#term-command">command</a> on the
+command line. When you enter this command explicitly, you may add a
+<a title="Concepts and terms: location pattern" href="#term-pattern">pattern</a> argument to limit the operation to a subset of files within
+the replica. You can also synchronize a specific file by entering its
+<a title="Concepts and terms: file number" href="#term-file-number">number</a> after the <a title="--fn switch" href="#switch-fn">
+<code>--fn</code> option</a>. This works
+regardless of whether <a title="--sync switch" href="#switch-sync">
+<code>--sync</code>
+</a> is explicitly entered on the
+command line. Note that you cannot use the <a title="--nosync switch" href="#switch-nosync">
+<code>--nosync</code>
+</a> option
+with this command.</p>
+<h4 id="switch-undo">
+<a name="switch-undo"> </a>-u, --undo</h4>
+<a name="switch-undo"> </a>
+<p>
+<strong>Syntax:</strong> <code>--undo</code> [ <em>file-or-pattern</em> ]</p>
+<p>Reverts file(s) in the <a title="Concepts and terms: bag" href="#term-bag">bag</a> to a historic state.
+This command retains the undone changes to files in a bag as
+branches of those files' version trees. The argument
+following this command must either be the relative location
+of a file in a bag, or a relative <a title="Concepts and terms: location pattern" href="#term-pattern">location pattern</a>.
+Single-file lookup by name will only succeed if there was
+just one file having that name, i.e. there were no <a title="Concepts and terms: history" href="#term-history">histories</a>
+of deleted or renamed files with the same name in the
+bag. Alternatively, you can specify the <a title="Concepts and terms: file number" href="#term-file-number">file number</a>
+using the <a title="--fn switch" href="#switch-fn">
+<code>--fn</code> option</a>. To return to the file's
+<a title="Concepts and terms: version" href="#term-version">version</a> with a certain <a title="Concepts and terms: version number" href="#term-version-number">version</a>, enter the
+<a title="--vn switch" href="#switch-vn">
+<code>--vn</code> option</a> with that number. To return to the file's
+contents as of a specific date, enter the
+<a title="--as-of switch" href="#switch-as-of">
+<code>--as-of</code> option</a> with that date. When reverting files
+matching a <a title="Concepts and terms: location pattern" href="#term-pattern">pattern</a>, you can only use the <a title="--as-of switch" href="#switch-as-of">
+<code>--as-of</code> option</a>
+to select the files' <a title="Concepts and terms: version" href="#term-version">versions</a>. Without that option, the files will
+be reverted to the current date. Such operation has no effect on
+local files unless their histories have future-dated versions. By
+default, <code>--undo</code> will synchronize the file(s) matching the name or
+pattern (and the effective <a title="Concepts and terms: filter" href="#term-filter">filter</a>), or the numbered file regardless of
+the filter, with the current <a title="Concepts and terms: replica" href="#term-replica">replica</a>. To prevent such synchronization,
+use the <a title="--nosync switch" href="#switch-nosync">
+<code>--nosync</code> option</a>.</p>
+<p>
+<a name="options-reference"> </a>
+</p>
+<h3 id="toc000019">
+<a name="toc000019"> </a>Options</h3>
+<h4 id="switch-default-action">
+<a name="switch-default-action"> </a>-A, --default-action</h4>
+<a name="switch-default-action"> </a>
+<p>
+<strong>Syntax:</strong> --default-action <em>action</em>
+</p>
+<p>Sets the default action to take in case of a
+<a title="Concepts and terms: conflict of versions" href="#term-conflict">version conflict</a>. Allowed values are <code>NONE</code>, <code>UPDATE</code>,
+and <code>DISCARD</code>.</p>
+<h4 id="switch-as-of">
+<a name="switch-as-of"> </a>-a, --as-of</h4>
+<a name="switch-as-of"> </a>
+<p>
+<strong>Syntax:</strong> <code>--as-of</code> [ <em>date [time]</em> ]</p>
+<p>Specifies the moment in time to look up in files' <a title="Concepts and terms: history" href="#term-history">histories</a>.
+Use this option with <a title="--restore switch" href="#switch-restore">
+<code>--restore</code>
+</a> to obtain a copy of the file's
+data as of a certain time in the past, or with <a title="--undo switch" href="#switch-undo">
+<code>--undo</code>
+</a> to
+return a file in the <a title="Concepts and terms: bag" href="#term-bag">bag</a> to a historic state. Note that time-bound
+commands may produce correct results only within a certain range of
+dates. For instance, you may not be able to restore a file
+to a state beyond the initial synchronization time or beyond the <a title="Concepts and terms: epoch" href="#term-epoch">epoch</a> if
+<a title="--purge switch" href="#switch-purge">
+<code>--purge</code>
+</a> has been run. Use the <a title="--log switch" href="#switch-log">
+<code>--log</code> command</a> to
+determine the feasible date range for a bag. The
+argument must be in <code>yyyy-mm-dd</code> date format followed by an
+optional <code>hh:mm:ss[.f...]</code> part. The optional part is a
+separate argument on the command line. In other words, you
+must not escape the white space between the parts of the
+argument.</p>
+<h4 id="switch-allow-time-diff">
+<a name="switch-allow-time-diff"> </a>--allow-time-diff</h4>
+<a name="switch-allow-time-diff"> </a>
+<p>
+<strong>Syntax:</strong> <code>--allow-time-diff</code> <em>threshold</em>
+</p>
+<p>Sets the difference threshold for files' time stamps to be
+considered distinct. Measured in milliseconds. The default
+is 3 seconds minus one millisecond.</p>
+<h4 id="switch-local">
+<a name="switch-local"> </a>-C, --local</h4>
+<a name="switch-local"> </a>
+<p>
+<strong>Syntax:</strong> <code>--local</code> [ <em>path</em> ]</p>
+<p>Sets the root path of the <a title="Concepts and terms: replica" href="#term-replica">replica</a> to work with. A user may create
+multiple <a title="Concepts and terms: replica" href="#term-replica">replicas</a> of the same bag and synchronize them one at a
+time. Append <code>--default</code> to make this replica the <a title="Concepts and terms: default replica" href="#term-default-replica">default replica</a>
+for your user account.</p>
+<h4 id="switch-cds">
+<a name="switch-cds"> </a>--cds</h4>
+<a name="switch-cds"> </a>
+<p>
+<strong>Syntax:</strong> <code>--cds</code> <em>percentage</em>
+</p>
+<p>Specifies the maximum size of a structure describing differences
+between versions of any file that <em>data-bag</em> is allowed to keep in
+memory. The boundary is set as a percentage or a fraction of the
+JVM's maximum heap size. Default value of this parameter is 10%.</p>
+<h4 id="switch-compress">
+<a name="switch-compress"> </a>--compress</h4>
+<a name="switch-compress"> </a>
+<p>
+<strong>Syntax:</strong> <code>--compress</code> <em>mode</em>
+</p>
+<p>Selects a compression algorithm to be used for files stored
+in the <a title="Concepts and terms: bag" href="#term-bag">bag</a>. Supported values are <code>NO</code>, <code>LZF</code>, and
+<code>DEFLATE</code>. Defaults to <code>DEFLATE</code>. This setting is stored in the
+bag and affects future invocations. It does not change
+the format of existing data in the bag.</p>
+<h4 id="switch-create">
+<a name="switch-create"> </a>--create</h4>
+<a name="switch-create"> </a>
+<p>
+<strong>Syntax:</strong> <code>--create</code>
+</p>
+<p>Asks <em>data-bag</em> to create a new <a title="Concepts and terms: bag" href="#term-bag">bag</a>. Use the <a title="--medium switch" href="#switch-medium">
+<code>--medium</code> option</a>
+to choose the new bag's location. To have the bag encrypted, add the
+<a title="--encrypt switch" href="#switch-encrypt">
+<code>--encrypt</code> option</a>.</p>
+<h4 id="switch-medium">
+<a name="switch-medium"> </a>-d, --medium</h4>
+<a name="switch-medium"> </a>
+<p>
+<strong>Syntax:</strong> <code>--medium</code> [ <em>root [path]</em> ]</p>
+<p>Points to a medium or directory containing the <a title="Concepts and terms: bag" href="#term-bag">bag</a>. The default is
+current directory. Optional <em>path</em> argument points to a
+subdirectory on the selected medium if it stores multiple bags.</p>
+<h4 id="switch-dcs">
+<a name="switch-dcs"> </a>--dcs</h4>
+<a name="switch-dcs"> </a>
+<p>
+<strong>Syntax:</strong> <code>--dcs</code> <em>percentage</em>
+</p>
+<p>Specifies the maximum total size of all incremental differences between
+the complete image of a file and any new <a title="Concepts and terms: version" href="#term-version">version</a> stored in the <a title="Concepts and terms: bag" href="#term-bag">bag</a>.
+Once <em>data-bag</em> exceeds that limit, it stores the new version of a file in its
+entirety. That reduces the time it may take to restore the file. The
+boundary is set as a percentage or a fraction of the file's size. Default
+value of this parameter is 50%.</p>
+<h4 id="switch-encrypt">
+<a name="switch-encrypt"> </a>-E, --encrypt</h4>
+<a name="switch-encrypt"> </a>
+<p>
+<strong>Syntax:</strong> <code>--encrypt</code> [ <em>key-source</em> ... ] [ <code>--cipher AES</code> | <code>--cipher XTEA</code> ]</p>
+<p>Tells <em>data-bag</em> to use encryption when creating or opening
+the <a title="Concepts and terms: bag" href="#term-bag">bag</a>. To enable encryption of a bag, use this option when
+you create it with <a title="--create switch" href="#switch-create">
+<code>--create</code> switch</a>. Once a bag is encrypted,
+the key and cipher remain the same. You have to include
+<a title="--encrypt switch" href="#switch-encrypt">
+<code>--encrypt</code> option</a> with the correct key and cipher every time
+you use that bag. To change encryption parameters, use the
+<a href="#change-encryption">
+<code>org.h2.tools.ChangeFileEncryption</code> utility</a> included
+with the <em>data-bag</em> distribution. That utility also allows you to
+encrypt or decrypt an existing bag. You can place the
+encryption key on the command line, have it read from
+standard input, or enter it interactively when <em>data-bag</em>
+starts. An optional argument that follows <a title="--encrypt switch" href="#switch-encrypt">
+<code>--encrypt</code>
+</a> selects
+an encryption key or its source. If that argument is the
+word <code>key</code>, <em>data-bag</em> will use the next command line argument
+as the key. If you enter the <code>ask</code> string as the argument,
+<em>data-bag</em> will attempt to ask you for password interactively.
+That only works with Java 6 or newer when <em>data-bag</em> is run
+from a shell without input or output redirection. Finally,
+you may have <em>data-bag</em>  read the key from standard input by
+entering <code>stdin</code> argument. If you do that, your input may
+be shown on screen. By default, <em>data-bag</em> will try to use the
+console and fall back to the standard input if the console
+is unavailable. Regardless of how <em>data-bag</em> obtains the
+encryption key, it will not accept keys that contain a space
+character (ASCII 32). If the password is entered
+interactively or read from the standard input, it cannot
+contain end-of-line sequences either. You can append the <code>--cipher</code>
+switch to <a title="--encrypt switch" href="#switch-encrypt">
+<code>--encrypt</code>
+</a> to select an encryption
+algorithm. Supported algorithms are <code>AES</code> and <code>XTEA</code>. The
+default cipher is <code>AES</code>.</p>
+<h4 id="switch-filter">
+<a name="switch-filter"> </a>-F, --filter</h4>
+<a name="switch-filter"> </a>
+<p>
+<strong>Syntax:</strong> <code>--filter</code> [ <em>name</em> ] [ <code>--default</code> | <code>--invert</code> ]</p>
+<p>Selects a <a title="Concepts and terms: filter" href="#term-filter">filter</a> to apply to the set of files before
+performing the requested command. Files that satisfy the
+filter will be processed, while those that don't will be
+ignored. Filters apply to both local files and files in a bag.
+You can add the <code>--invert</code> modifier following the filter name to
+reverse the filter's effect. You can designate a default
+filter for the current <a title="Concepts and terms: replica" href="#term-replica">replica</a> that will apply when no other
+filter is selected. You do that by entering the <code>--default</code>
+modifier after the filter name. Replicas that do not have a
+default filter assigned will use the filter named <code>default</code>,
+if it exists, or the built-in filter <code>all</code> otherwise. Filter
+option is also used to designate a filter to load, display,
+save, or delete, when applicable.</p>
+<h4 id="switch-fn">
+<a name="switch-fn"> </a>--fn</h4>
+<a name="switch-fn"> </a>
+<p>
+<strong>Syntax:</strong> <code>--fn</code> <em>file-id</em>
+</p>
+<p>Chooses a file in a bag by its <a title="Concepts and terms: file number" href="#term-file-number">number</a>. Use this option with
+commands like <a title="--history switch" href="#switch-history">
+<code>--history</code>
+</a> or <a title="--restore switch" href="#switch-restore">
+<code>--restore</code>
+</a> to
+resolve ambiguity among the file records. When a file is specified
+by number, normal <a title="Concepts and terms: filter" href="#term-filter">filtering</a> rules are ignored during the
+file lookup.</p>
+<h4 id="switch-load">
+<a name="switch-load"> </a>--load</h4>
+<a name="switch-load"> </a>
+<p>
+<strong>Syntax:</strong> <code>--load</code> <em>from-file</em>
+</p>
+<p>Loads a <a title="Concepts and terms: filter" href="#term-filter">filter</a> definition from a file. Use it in conjunction
+with <a title="--filter switch" href="#switch-filter">
+<code>--filter</code> option</a> that specifies the name of a filter to
+load. A file name must follow the <code>--load</code> option and point to
+a file with a valid <a title="Concepts and terms: filter" href="#term-filter">filter</a> definition. Filter definition files are
+created by running <a title="--list switch" href="#switch-list">
+<code>--list filter</code>
+</a> command with the
+<a title="--save switch" href="#switch-save">
+<code>--save</code> option</a>. Note that you cannot load the built-in filter
+<code>all</code>, but you can load the filter named <code>default</code>.</p>
+<h4 id="switch-lob-size">
+<a name="switch-lob-size"> </a>--lob-size</h4>
+<a name="switch-lob-size"> </a>
+<p>
+<strong>Syntax:</strong> <code>--lob-size</code> <em>bytes</em>
+</p>
+<p>Changes the size threshold for file images and <a title="Concepts and terms: version" href="#term-version">version</a> differences that
+triggers their storage as separate files on the medium containing
+the <a title="Concepts and terms: bag" href="#term-bag">bag</a>. The default is 3500 bytes. This setting is stored in the bag
+and affects future invocations. It does not change the storage
+strategy for existing data in the bag.</p>
+<h4 id="switch-nosync">
+<a name="switch-nosync"> </a>-N, --nosync</h4>
+<a name="switch-nosync"> </a>
+<p>
+<strong>Syntax:</strong> <code>--nosync</code>
+</p>
+<p>Disables automatic synchronization of the current <a title="Concepts and terms: replica" href="#term-replica">replica</a>.
+Use this option when you want to do additional setup before
+using the replica, or to change settings without
+synchronizing.</p>
+<h4 id="switch-nobanner">
+<a name="switch-nobanner"> </a>--nobanner</h4>
+<a name="switch-nobanner"> </a>
+<p>
+<strong>Syntax:</strong> <code>--nobanner</code>
+</p>
+<p>Instructs <em>data-bag</em> to omit the header from its output (for batch
+processing).</p>
+<h4 id="switch-save">
+<a name="switch-save"> </a>-o, --save</h4>
+<a name="switch-save"> </a>
+<p>
+<strong>Syntax:</strong> <code>--save</code> <em>file</em>
+</p>
+<p>Writes the program's output to a file. When used in conjunction with
+<a title="--restore switch" href="#switch-restore">
+<code>--restore</code> command</a>, this option causes <em>data-bag</em> to
+restore files to locations other than their current <a title="Concepts and terms: replica" href="#term-replica">replicas</a>.
+With <a title="Concepts and terms: command" href="#term-command">commands</a> that display lists or other information, this
+option redirects the output and suppresses some formatting. With
+<a title="--list switch" href="#switch-list">
+<code>--list filter</code>
+</a>, this option instructs <em>data-bag</em> to create
+a file that you can later load into a <a title="Concepts and terms: filter" href="#term-filter">filter</a> using the
+<a title="--load switch" href="#switch-load">
+<code>--load</code> option</a>.</p>
+<h4 id="switch-set">
+<a name="switch-set"> </a>--set</h4>
+<a name="switch-set"> </a>
+<p>
+<strong>Syntax:</strong> <code>--set</code> <em>include exclude</em>
+</p>
+<p>Updates a <a title="Concepts and terms: filter" href="#term-filter">filter</a> definition from the command line. Use it in
+conjunction with the <a title="--filter switch" href="#switch-filter">
+<code>--filter</code> option</a> that specifies the
+name of a filter to change. Note that you cannot change the built-in
+filter <code>all</code>, but you can change the filter named <code>default</code>.
+There must be two arguments following this option. First
+argument is expected to list the <a title="Concepts and terms: location pattern" href="#term-pattern">location patterns</a> to
+include in filtered results, while second argument should
+list the patterns to exclude. Both lists must use
+system-dependent path delimiter (for example, <code>:</code> on Unix
+and Mac, or <code>;</code> on Windows) to separate their elements.
+Lists that contain spaces must be properly escaped to
+prevent the operating system from treating them as multiple
+arguments. To omit one of the lists, use either an empty
+argument or a single path delimiter. If the inclusion list
+is omitted or empty, <em>data-bag</em> implies an include-all
+pattern.</p>
+<h4 id="switch-upgrade-db">
+<a name="switch-upgrade-db"> </a>--upgrade-db</h4>
+<a name="switch-upgrade-db"> </a>
+<p>
+<strong>Syntax:</strong> <code>--upgrade-db</code>
+</p>
+<p>Enables schema evolution for <a title="Concepts and terms: bag" href="#term-bag">bags</a> created by previous
+versions of <em>data-bag</em>. Please remember to back up your
+bag before using this option. That will help you
+recover from problems that you may encounter during the upgrade.</p>
+<h4 id="switch-verbose">
+<a name="switch-verbose"> </a>-v, --verbose</h4>
+<a name="switch-verbose"> </a>
+<p>
+<strong>Syntax:</strong> <code>--verbose</code> [ <em>level</em> ]</p>
+<p>Runs in verbose mode, logging additional status information. The <em>level</em>
+argument is optional. <code>-vv</code> makes the <em>data-bag</em> run in the debug mode.</p>
+<h4 id="switch-vn">
+<a name="switch-vn"> </a>--vn</h4>
+<a name="switch-vn"> </a>
+<p>
+<strong>Syntax:</strong> <code>--vn</code> <em>version-id</em>
+</p>
+<p>Selects a file's <a title="Concepts and terms: version" href="#term-version">version</a> by its <a title="Concepts and terms: version number" href="#term-version-number">number</a>. Use this
+option with <a title="--restore switch" href="#switch-restore">
+<code>--restore</code>
+</a> to restore an older version of a file.</p>
+<h2 id="toc000020">
+<a name="toc000020"> </a>Concepts and terms used in this manual</h2>
 <dl>
 
 <dt id="term-bag">
@@ -986,9 +1661,8 @@ shared medium.</dd>
 <a name="term-command"> </a>Command</dt>
 <dd>a group of <em>data-bag</em> arguments that begins with a certain literal
 string or a shorthand string. The strings that begin <em>data-bag</em>'s
-commands on a command line, including shorthands, are listed in the <i>
-<b>
-TODO: provide</b> commands reference</i>. Unlike <a href="#option">options</a>,
+commands on a command line, including shorthands, are listed in the
+[commands reference](#commands-reference). Unlike <a href="#option">options</a>,
 commands are mutually exclusive, i.e. you cannot enter more than one command on
 a command line.</dd>
 
@@ -1011,7 +1685,7 @@ explicitly selected for the operation.</dd>
 <a href="#term-bag">bag</a>'s parameters and history and continues at present.
 A <a href="#term-bag">bag</a> is not required to retain artifacts that are
 older than its epoch. The epoch can be reset for a <a href="#term-bag">bag</a>
-by running the <a href="#purge-command">
+by running the <a href="#switch-purge">
 <code>--purge</code> command</a>.
 </dd>
 
@@ -1046,9 +1720,8 @@ and allows to match files across directory levels.</dd>
 <a name="term-option"> </a>Option</dt>
 <dd>a group of <em>data-bag</em> arguments that begins with a certain literal
 string or a shorthand string. The strings that begin <em>data-bag</em>'s
-options on a command line, including shorthands, are listed in the <i>
-<b>
-TODO: provide</b> options reference</i>. Options can be combined on a command
+options on a command line, including shorthands, are listed in the
+[options reference](#options-reference). Options can be combined on a command
 line with <a href="#commands">commands</a> and other options.</dd>
 
 <dt id="term-replica">
@@ -1077,15 +1750,17 @@ same file.</dd>
 are encountered</i></dd-->
 
 </dl>
-<h2 id="toc000017">
-<a name="toc000017"> </a>Your feedback and suggestions</h2>
+<h2 id="toc000021">
+<a name="toc000021"> </a>Your feedback and suggestions</h2>
 <p>You are welcome to submit feedback as well as your suggestions about the
 software. If you would like to contribute to the project, we are looking
 forward to working with you!</p>
 <p>You can send a message to the project's team via the
 <a href="http://www.livitski.name/contact">Contact page</a> at <a href="http://www.livitski.name/">http://www.livitski.name/</a>
 or via the <a href="http://data-bag.github.com/">project's page on GitHub</a>.</p>
-<h3>Thank you for using <em>data-bag</em>!</h3>
+<p>
+<strong>Thank you for using <em>data-bag</em>!</strong>
+</p>
 
 </body>
 </html>
