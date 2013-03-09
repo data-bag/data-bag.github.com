@@ -24,7 +24,7 @@ Please read file <a title="NOTICE file" href="https://github.com/data-bag/code/b
 <em>This manual is a work in progress.</em>
 </p>
 <p>
-<em>Last modified: March, 5 2013</em>
+<em>Last modified: March, 8 2013</em>
 </p>
 <hr/>
 <h2>Contents</h2>
@@ -1237,7 +1237,8 @@ entries beyond the <a title="Concepts and terms: epoch" href="#term-epoch">epoch
 <a name="switch-purge"> </a>--purge</h4>
 <a name="switch-purge"> </a>
 <p>
-<strong>Syntax:</strong> <code>--purge</code> [ <em>epoch</em> ]</p>
+<strong>Syntax:</strong> <code>--purge</code> <em>epoch</em>
+</p>
 <p>
 <a href="#purging-bags">Purges</a> the <a title="Concepts and terms: version" href="#term-version">versions</a> of files in the <a title="Concepts and terms: bag" href="#term-bag">bag</a>
 modified before the beginning of an <a title="Concepts and terms: epoch" href="#term-epoch">epoch</a>. The <em>epoch</em> argument
@@ -1401,7 +1402,8 @@ is 3 seconds minus one millisecond.</p>
 <a name="switch-local"> </a>-C, --local</h4>
 <a name="switch-local"> </a>
 <p>
-<strong>Syntax:</strong> <code>--local</code> [ <em>path</em> ]</p>
+<strong>Syntax:</strong> <code>--local</code> <em>path</em>
+</p>
 <p>Sets the root path of the <a title="Concepts and terms: replica" href="#term-replica">replica</a> to work with. A user may create
 multiple <a title="Concepts and terms: replica" href="#term-replica">replicas</a> of the same bag and synchronize them one at a
 time. Append <code>--default</code> to make this replica the <a title="Concepts and terms: default replica" href="#term-default-replica">default replica</a>
@@ -1412,10 +1414,12 @@ for your user account.</p>
 <p>
 <strong>Syntax:</strong> <code>--cds</code> <em>percentage</em>
 </p>
-<p>Specifies the maximum size of a structure describing differences
-between versions of any file that <em>data-bag</em> is allowed to keep in
-memory. The boundary is set as a percentage or a fraction of the
-JVM's maximum heap size. Default value of this parameter is 10%.</p>
+<p>Adjusts the program's memory utilization allowance. The less memory
+<em>data-bag</em> is allowed to use, the more disk space it will need to
+store files. This parameter limits the size of a structure describing
+differences between versions of any file that <em>data-bag</em> is allowed
+to keep in memory. The boundary is set as a percentage or a fraction
+of the JVM's maximum heap size. Default value of this parameter is 10%.</p>
 <h4 id="switch-compress">
 <a name="switch-compress"> </a>--compress</h4>
 <a name="switch-compress"> </a>
@@ -1442,7 +1446,8 @@ to choose the new bag's location. To have the bag encrypted, add the
 <a name="switch-medium"> </a>-d, --medium</h4>
 <a name="switch-medium"> </a>
 <p>
-<strong>Syntax:</strong> <code>--medium</code> [ <em>root [path]</em> ]</p>
+<strong>Syntax:</strong> <code>--medium</code> <em>root [path]</em>
+</p>
 <p>Points to a medium or directory containing the <a title="Concepts and terms: bag" href="#term-bag">bag</a>. The default is
 current directory. Optional <em>path</em> argument points to a
 subdirectory on the selected medium if it stores multiple bags.</p>
@@ -1452,12 +1457,14 @@ subdirectory on the selected medium if it stores multiple bags.</p>
 <p>
 <strong>Syntax:</strong> <code>--dcs</code> <em>percentage</em>
 </p>
-<p>Specifies the maximum total size of all incremental differences between
+<p>Limits the amount of data that <em>data-bag</em> will have to read when it restores a
+file. A lower limit reduces the time it will take to synchronize and retore
+files at the expense of additional storage space used by the <a title="Concepts and terms: bag" href="#term-bag">bag</a>.
+The parameter is the maximum total size of all incremental differences between
 the complete image of a file and any new <a title="Concepts and terms: version" href="#term-version">version</a> stored in the <a title="Concepts and terms: bag" href="#term-bag">bag</a>.
 Once <em>data-bag</em> exceeds that limit, it stores the new version of a file in its
-entirety. That reduces the time it may take to restore the file. The
-boundary is set as a percentage or a fraction of the file's size. Default
-value of this parameter is 50%.</p>
+entirety. The boundary is set as a percentage or a fraction of the file's size.
+The default value of this parameter is 50%.</p>
 <h4 id="switch-encrypt">
 <a name="switch-encrypt"> </a>-E, --encrypt</h4>
 <a name="switch-encrypt"> </a>
@@ -1504,7 +1511,7 @@ default cipher is <code>AES</code>.</p>
 <a name="switch-filter"> </a>-F, --filter</h4>
 <a name="switch-filter"> </a>
 <p>
-<strong>Syntax:</strong> <code>--filter</code> [ <em>name</em> ] [ <code>--default</code> | <code>--invert</code> ]</p>
+<strong>Syntax:</strong> <code>--filter</code> <em>name</em> [ <code>--default</code> | <code>--invert</code> ]</p>
 <p>Selects a <a title="Concepts and terms: filter" href="#term-filter">filter</a> to apply to the set of files before
 performing the requested command. Files that satisfy the
 filter will be processed, while those that don't will be
@@ -1556,11 +1563,12 @@ created by running <a title="--list switch" href="#switch-list">
 <p>
 <strong>Syntax:</strong> <code>--lob-size</code> <em>bytes</em>
 </p>
-<p>Changes the size threshold for file images and <a title="Concepts and terms: version" href="#term-version">version</a> differences that
-triggers their storage as separate files on the medium containing
-the <a title="Concepts and terms: bag" href="#term-bag">bag</a>. The default is 3500 bytes. This setting is stored in the bag
-and affects future invocations. It does not change the storage
-strategy for existing data in the bag.</p>
+<p>Adjusts the storage policy that <em>data-bag</em> applies to its binary data.
+The parameter is the maximum size of a binary object, such as contents of
+a file, that triggers its storage in a separate file on the medium containing
+the <a title="Concepts and terms: bag" href="#term-bag">bag</a>. Smaller objects are stored in the bag's main file. The default
+threshold is 3500 bytes. This setting is stored in the bag and affects future
+invocations. It does not change the storage strategy for existing data in the bag.</p>
 <h4 id="switch-nosync">
 <a name="switch-nosync"> </a>-N, --nosync</h4>
 <a name="switch-nosync"> </a>
@@ -1577,8 +1585,8 @@ synchronizing.</p>
 <p>
 <strong>Syntax:</strong> <code>--nobanner</code>
 </p>
-<p>Instructs <em>data-bag</em> to omit the header from its output (for batch
-processing).</p>
+<p>Instructs <em>data-bag</em> to omit the header from its output. This option
+simplifies the output parsing when running <em>data-bag</em> from a script.</p>
 <h4 id="switch-save">
 <a name="switch-save"> </a>-o, --save</h4>
 <a name="switch-save"> </a>
@@ -1662,9 +1670,9 @@ shared medium.</dd>
 <dd>a group of <em>data-bag</em> arguments that begins with a certain literal
 string or a shorthand string. The strings that begin <em>data-bag</em>'s
 commands on a command line, including shorthands, are listed in the
-[commands reference](#commands-reference). Unlike <a href="#option">options</a>,
-commands are mutually exclusive, i.e. you cannot enter more than one command on
-a command line.</dd>
+<a href="#commands-reference">commands reference</a>. Unlike
+<a href="#option">options</a>, commands are mutually exclusive, i.e. you
+cannot enter more than one command on a command line.</dd>
 
 <dt id="term-conflict">
 <a name="term-conflict"> </a>Conflict of versions</dt>
@@ -1721,8 +1729,8 @@ and allows to match files across directory levels.</dd>
 <dd>a group of <em>data-bag</em> arguments that begins with a certain literal
 string or a shorthand string. The strings that begin <em>data-bag</em>'s
 options on a command line, including shorthands, are listed in the
-[options reference](#options-reference). Options can be combined on a command
-line with <a href="#commands">commands</a> and other options.</dd>
+<a href="#options-reference">options reference</a>. Options can be combined on
+a command line with <a href="#commands">commands</a> and other options.</dd>
 
 <dt id="term-replica">
 <a name="term-replica"> </a>Replica</dt>
